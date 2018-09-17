@@ -9,6 +9,7 @@ Repository (must contain a manifest):
 ***may need to balance***
 --search tree
 --print
+--copy source tree into repo
 
 Manifest:
 -must log the command/date/time for each action taken and store it into a text file attached to the repository
