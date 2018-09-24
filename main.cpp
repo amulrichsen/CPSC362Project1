@@ -39,12 +39,17 @@ public:
 	Repo() {
 		head = NULL;
 	}
+	void assignRepoName(string name)
+	{
+		this->rName = name;
+	}
 	//search tree
 	//print
 	//copy
 
 
 };
+
 
 class Leaf
 {
@@ -76,7 +81,7 @@ public:
 
 };
 
-
+void createRepo(string source, Repo repoName);
 
 int main()
 {
@@ -92,6 +97,12 @@ int main()
 
 
 
+
 	system("pause");
 	return 0;
+}
+
+void createRepo(string source, Repo rpn)
+{
+	rpn.assignRepoName(source);
 }
