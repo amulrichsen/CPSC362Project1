@@ -9,6 +9,7 @@ using namespace std;
 class File
 {
 private:
+	string manifest; //manifest name .txt
 	string fName; //file name
 	string fExt; //file extension
 	string artName; //artifact name --has same file extension
@@ -27,33 +28,10 @@ public:
 
 };
 
-
-class Repo
-{
-private:
-	string rName; //repo name
-	string manifest; //manifest name .txt
-	Repo *head;
-
-public:
-	Repo() {
-		head = NULL;
-	}
-	void assignRepoName(string name)
-	{
-		this->rName = name;
-	}
-	//search tree
-	//print
-	//copy
-
-
-};
-
-
 class Leaf
 {
 private:
+	string manifest; //manifest name .txt
 	string lName; //leaf name
 	string lExt; //leaf extension -- not necessary if subfolder
 
@@ -62,17 +40,29 @@ private:
 
 	bool isSubFolder; //tells us if it is a subfolder
 	bool isFileFolder; //tells us if it a secret file folder
-	
+	bool isHead; //head of the repo
+
 
 
 public:
 	Leaf() {
+		manifest = "";
 		lName = "";
 		lExt = "";
 		leafNext = NULL;
 		files = NULL;
 		isSubFolder = false;
 		isFileFolder = false;
+		isHead = false;
+	}
+	void assignLeafName(string name)
+	{
+		this->lName = name;
+	}
+	void assignManifest(string name)
+	{
+		this->manifest = name;
+		this->manifest += ".txt";
 	}
 	//create subfolder
 	//create file
@@ -81,7 +71,8 @@ public:
 
 };
 
-void createRepo(string source, Repo repoName);
+
+void createRepo(string source, Leaf repoName);
 
 int main()
 {
@@ -95,14 +86,19 @@ int main()
 	i think this will be easiest for recreation
 	*/
 
-
+	
 
 
 	system("pause");
 	return 0;
 }
 
-void createRepo(string source, Repo rpn)
+void createRepo(string source, Leaf rpn)
 {
-	rpn.assignRepoName(source);
+	rpn.assignLeafName(source);
+	rpn.assignManifest(source);
+
+	Leaf *emptyLeaf = new Leaf;
+	
+
 }
