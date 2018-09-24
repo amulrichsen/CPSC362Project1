@@ -8,7 +8,7 @@ using namespace std;
 
 class File
 {
-private:
+public:
 	string manifest; //manifest name .txt
 	string fName; //file name
 	string fExt; //file extension
@@ -30,7 +30,7 @@ public:
 
 class Leaf
 {
-private:
+public:
 	string manifest; //manifest name .txt
 	string lName; //leaf name
 	string lExt; //leaf extension -- not necessary if subfolder
@@ -55,15 +55,28 @@ public:
 		isFileFolder = false;
 		isHead = false;
 	}
-	void assignLeafName(string name)
-	{
-		this->lName = name;
-	}
+
 	void assignManifest(string name)
 	{
 		this->manifest = name;
 		this->manifest += ".txt";
 	}
+
+
+	/*
+	void assignLeafName(string name)
+	{
+		this->lName = name;
+	}
+	
+	void assignHead(Leaf *n)
+	{
+		this->leafNext = n;
+		cout << this->leafNext;
+	}
+	*/
+
+
 	//create subfolder
 	//create file
 	//delete subfolder
@@ -73,6 +86,7 @@ public:
 
 
 void createRepo(string source, Leaf repoName);
+void createFile(string newFile);
 
 int main()
 {
@@ -87,7 +101,12 @@ int main()
 	*/
 
 	
-
+	Leaf l1;
+	//Leaf *l2 = new Leaf;
+	//l2->lName = "test";
+	//l1.leafNext = l2;
+	
+	createRepo("source", l1);
 
 	system("pause");
 	return 0;
@@ -95,10 +114,20 @@ int main()
 
 void createRepo(string source, Leaf rpn)
 {
-	rpn.assignLeafName(source);
+	rpn.lName = source;
 	rpn.assignManifest(source);
+	createFile(rpn.manifest);
 
 	Leaf *emptyLeaf = new Leaf;
 	
 
+}
+
+void createFile(string newFile)
+{
+	ofstream file;
+	file.open(newFile);
+	file << "test to see if I am creating and writing to a \n new file i made";
+	file.close();
+	//cout << "got here" << endl;
 }
