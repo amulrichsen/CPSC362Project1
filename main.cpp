@@ -8,7 +8,8 @@ using namespace std;
 
 class File
 {
-private:
+public:
+	string manifest; //manifest name .txt
 	string fName; //file name
 	string fExt; //file extension
 	string artName; //artifact name --has same file extension
@@ -27,10 +28,57 @@ public:
 
 };
 
+class Leaf
+{
+public:
+	string lName; //leaf name
+	string lExt; //leaf extension -- not necessary if subfolder
+
+	Leaf *leafNext; //points to next leaf if it is a subfolder
+	File *files; //leaf file linked list -- add files inside of leaf folder
+
+	bool isSubFolder; //tells us if it is a subfolder
+	bool isFileFolder; //tells us if it a secret file folder
+
+
+
+public:
+	Leaf() {
+		lName = "";
+		lExt = "";
+		leafNext = NULL;
+		files = NULL;
+		isSubFolder = false;
+		isFileFolder = false;
+	}
+
+	
+
+
+	/*
+	void assignLeafName(string name)
+	{
+	this->lName = name;
+	}
+
+	void assignHead(Leaf *n)
+	{
+	this->leafNext = n;
+	cout << this->leafNext;
+	}
+	*/
+
+
+	//create subfolder
+	//create file
+	//delete subfolder
+	//delete file
+
+};
 
 class Repo
 {
-private:
+public:
 	string rName; //repo name
 	string manifest; //manifest name .txt
 	Repo *head;
@@ -43,6 +91,13 @@ public:
 	{
 		this->rName = name;
 	}
+
+	void assignManifest(string name)
+	{
+		this->manifest = name;
+		this->manifest += ".txt";
+	}
+
 	//search tree
 	//print
 	//copy
@@ -51,37 +106,9 @@ public:
 };
 
 
-class Leaf
-{
-private:
-	string lName; //leaf name
-	string lExt; //leaf extension -- not necessary if subfolder
-
-	Leaf *leafNext; //points to next leaf if it is a subfolder
-	File *files; //leaf file linked list -- add files inside of leaf folder
-
-	bool isSubFolder; //tells us if it is a subfolder
-	bool isFileFolder; //tells us if it a secret file folder
-	
-
-
-public:
-	Leaf() {
-		lName = "";
-		lExt = "";
-		leafNext = NULL;
-		files = NULL;
-		isSubFolder = false;
-		isFileFolder = false;
-	}
-	//create subfolder
-	//create file
-	//delete subfolder
-	//delete file
-
-};
 
 void createRepo(string source, Repo repoName);
+void createFile(string newFile);
 
 int main()
 {
@@ -96,7 +123,12 @@ int main()
 	*/
 
 
+	Repo r1;
+	//Leaf *l2 = new Leaf;
+	//l2->lName = "test";
+	//l1.leafNext = l2;
 
+	createRepo("source", r1);
 
 	system("pause");
 	return 0;
@@ -104,5 +136,24 @@ int main()
 
 void createRepo(string source, Repo rpn)
 {
-	rpn.assignRepoName(source);
+	rpn.rName = source;
+	rpn.assignManifest(source);
+	createFile(rpn.manifest);
+
+	Leaf *emptyLeaf = new Leaf;
+
+
+}
+
+void createFile(string newFile)
+{
+	ofstream file;
+	file.open(newFile);
+
+	//ifstream src(sourceName, ios::binary);
+	//ofstream dst(destName, ios::binary);
+	dst << src.rdbuf();
+	//file << "test to see if I am creating and writing to a \n new file i made";
+	file.close();
+	//cout << "got here" << endl;
 }
