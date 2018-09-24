@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
+#include "artifact.h"
 
 using namespace std;
 
@@ -109,6 +110,7 @@ public:
 
 void createRepo(string source, Repo repoName);
 void createFile(string newFile);
+void copyFile(string sourceName, string destName);
 
 int main()
 {
@@ -156,4 +158,16 @@ void createFile(string newFile)
 	//file << "test to see if I am creating and writing to a \n new file i made";
 	file.close();
 	//cout << "got here" << endl;
+}
+
+/*	Params: Source file's path+name, Destination file's path + name
+Function copies a file from the source to the destination
+Returns: Nothing
+*/
+void copyFile(std::string sourceName, std::string destName)
+{
+	ifstream src(sourceName, ios::binary);
+	ofstream dst(destName, ios::binary);
+
+	dst << src.rdbuf();
 }
