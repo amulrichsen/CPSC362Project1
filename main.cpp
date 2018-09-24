@@ -136,6 +136,9 @@ int main()
 
 	createRepo(sourceName, r1);
 
+	readFromSource(sourceName);
+
+
 	system("pause");
 	return 0;
 }
@@ -175,13 +178,32 @@ void copyFile(string sourceName, string destName)
 
 void readFromSource(string sourceFile)
 {
-	string line;
+	string line = "";
+	string temp = "";
+	char c;
+	int iter = 0;
+	bool isSubFolder = false;
+	bool isFile = false;
 	ifstream file(sourceFile);
+
 	if (file.is_open())
 	{
 		while (getline(file, line))
 		{
 			//read the file line into line var and call functions
+			//do-while loop because first char should always be a '/'
+			c = line[iter];
+			cout << "c: " << c << endl;
+			do
+			{
+				temp += c;
+				if (c == '.')
+					isFile = true;
+				++iter;
+				c = line[iter];
+				cout << temp << endl;
+			} while (c != '/');
+
 		}
 		file.close();
 	}
