@@ -6,6 +6,28 @@
 
 using namespace std;
 
+class File
+{
+private:
+	string fName; //file name
+	string fExt; //file extension
+	string artName; //artifact name --has same file extension
+	File *next; //if a leaf has multiple files, this will point to the next file attached to leaf
+
+public:
+	File() {
+		fName = "";
+		fExt = "";
+		artName = "";
+		next = NULL;
+	}
+	//create artifact file and copy file info into it
+	//create checksum and assign to artName with file extension
+
+
+};
+
+
 class Repo
 {
 private:
@@ -54,26 +76,7 @@ public:
 
 };
 
-class File
-{
-private:
-	string fName; //file name
-	string fExt; //file extension
-	string artName; //artifact name --has same file extension
-	File *next; //if a leaf has multiple files, this will point to the next file attached to leaf
 
-public:
-	File() {
-		fName = "";
-		fExt = "";
-		artName = "";
-		next = NULL;
-	}
-	//create artifact file and copy file info into it
-	//create checksum and assign to artName with file extension
-
-
-};
 
 int main()
 {
