@@ -25,8 +25,12 @@ class Leaf
 private:
 	string lName; //leaf name
 	string lExt; //leaf extension -- not necessary if subfolder
+
 	Leaf *nextChild; //points to next leaf if it is a subfolder
 	bool isSubFolder; //tells us if it is a subfolder
+	bool isFileFolder; //tells us if it a secret file folder
+	File lfarr[10]; //leaf file array -- each leaf (if a subfolder) can have up to 10 files in it
+
 
 public:
 	//create subfolder
