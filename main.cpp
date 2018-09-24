@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
-#include "artifact.h"
 
 using namespace std;
 
@@ -111,6 +110,8 @@ public:
 void createRepo(string source, Repo repoName);
 void createFile(string newFile);
 void copyFile(string sourceName, string destName);
+void readFromSource(string sourceFile);
+
 
 int main()
 {
@@ -124,13 +125,16 @@ int main()
 	i think this will be easiest for recreation
 	*/
 
+	string sourceName;
+	cout << "Enter the name of the source file with extension (.txt): ";
+	cin >> sourceName;
 
 	Repo r1;
 	//Leaf *l2 = new Leaf;
 	//l2->lName = "test";
 	//l1.leafNext = l2;
 
-	createRepo("source", r1);
+	createRepo(sourceName, r1);
 
 	system("pause");
 	return 0;
@@ -142,7 +146,7 @@ void createRepo(string source, Repo rpn)
 	rpn.assignManifest(source);
 	createFile(rpn.manifest);
 
-	Leaf *emptyLeaf = new Leaf;
+	//Leaf *emptyLeaf = new Leaf;
 
 
 }
@@ -152,9 +156,6 @@ void createFile(string newFile)
 	ofstream file;
 	file.open(newFile);
 
-	//ifstream src(sourceName, ios::binary);
-	//ofstream dst(destName, ios::binary);
-	dst << src.rdbuf();
 	//file << "test to see if I am creating and writing to a \n new file i made";
 	file.close();
 	//cout << "got here" << endl;
@@ -164,10 +165,29 @@ void createFile(string newFile)
 Function copies a file from the source to the destination
 Returns: Nothing
 */
-void copyFile(std::string sourceName, std::string destName)
+void copyFile(string sourceName, string destName)
 {
 	ifstream src(sourceName, ios::binary);
 	ofstream dst(destName, ios::binary);
 
 	dst << src.rdbuf();
 }
+
+void readFromSource(string sourceFile)
+{
+	string line;
+	ifstream file(sourceFile);
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			//read the file line into line var and call functions
+		}
+		file.close();
+	}
+
+	else
+		cout << "Invalid source file.\n";
+}
+
+
