@@ -26,10 +26,11 @@ private:
 	string lName; //leaf name
 	string lExt; //leaf extension -- not necessary if subfolder
 
-	Leaf *nextChild; //points to next leaf if it is a subfolder
+	Leaf *leafRight; //points to next right leaf if it is a subfolder
+	Leaf *leafLeft; //points to next left leaf if it is a subfolder
 	bool isSubFolder; //tells us if it is a subfolder
 	bool isFileFolder; //tells us if it a secret file folder
-	File lfarr[10]; //leaf file array -- each leaf (if a subfolder) can have up to 10 files in it
+	File *files; //leaf file linked list -- add files inside of leaf folder
 
 
 public:
@@ -46,6 +47,8 @@ private:
 	string fName; //file name
 	string fExt; //file extension
 	string artName; //artifact name --has same file extension
+	File *next; //if a leaf has multiple files, this will point to the next file attached to leaf
+
 public:
 	//create artifact file and copy file info into it
 	//create checksum and assign to artName with file extension
