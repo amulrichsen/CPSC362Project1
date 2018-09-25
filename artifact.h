@@ -7,7 +7,7 @@ This is a a copy of a file with a checksum as it's name.
 class Artifact
 {
 public:
-	Artifact(std::string fileName, Artifact* next);
+	Artifact(std::string fileName, Artifact* next = NULL);
 	std::string getFileName();
 	std::string Artifact::getArtID();
 	Artifact* next; //Pointer to previous artifact version
