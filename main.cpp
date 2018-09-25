@@ -95,7 +95,8 @@ public:
 	void assignManifest(string name)
 	{
 		this->manifest = name;
-		this->manifest += ".txt";
+		this->manifest += "-manifest.txt";
+		cout << "Name of Manifest Text File: " << this->manifest << endl;
 	}
 
 	//search tree
@@ -110,7 +111,9 @@ public:
 void createRepo(string source, Repo repoName);
 void createManifest(string newFile);
 void copyFile(string sourceName, string destName);
-void readFromSource(string sourceFile);
+void readFromSource(string sourceFile, Repo repo);
+void createLeafFile();
+void createLeafFolder();
 
 
 int main()
@@ -134,9 +137,9 @@ int main()
 	//l2->lName = "test";
 	//l1.leafNext = l2;
 
-	createRepo(sourceName, r1);
+	//createRepo(sourceName, r1);
 
-	readFromSource(sourceName);
+	readFromSource(sourceName, r1);
 
 
 	system("pause");
@@ -149,6 +152,7 @@ void createRepo(string source, Repo rpn)
 	rpn.assignManifest(source);
 	createManifest(rpn.manifest);
 
+	cout << "repo successful created" << endl;
 	//Leaf *emptyLeaf = new Leaf;
 
 
@@ -159,9 +163,10 @@ void createManifest(string newFile)
 	ofstream file;
 	file.open(newFile);
 
-	//file << "test to see if I am creating and writing to a \n new file i made";
+	file << "test to see if I am creating and writing to a \n new manifest file i made";
 	file.close();
 	//cout << "got here" << endl;
+	cout << "created manifest\n";
 }
 
 /*	Params: Source file's path+name, Destination file's path + name
@@ -176,46 +181,71 @@ void copyFile(string sourceName, string destName)
 	dst << src.rdbuf();
 }
 
-void readFromSource(string sourceFile)
+void readFromSource(string sourceFile, Repo repo)
 {
 	string line = "";
 	string curr = "";
 	string prev = "";
 	char c;
 	int iter = 0;
-	//bool isSubFolder = true;
+	int slashCount = 0;
+	//bool isSubFolder = false;
 	bool isFile = false;
+	bool isRoot = true;
 	ifstream file(sourceFile);
 
 	if (file.is_open())
 	{
 		while (getline(file, line))
 		{
+			for (int i = 0; i < line.size(); i++)
+			{
+				if (line[i] == '/')
+					slashCount++;
+				if (line[i] == '.')
+					slashCount++;
+			}
+			cout << "slash count: " << slashCount << endl;
 			//read the file line into line var and call functions
 			//do-while loop because first char should always be a '/'
-			c = line[iter];
 			
-			do
+			for (int j = 0; j < slashCount; j++)
 			{
-				curr += c;
-				if (c == '.')
-					isFile = true;
-				++iter;
+				cout << "iter: " << iter << endl;
 				c = line[iter];
+
+				do
+				{
+					curr += c;
+					if (c == '.')
+						isFile = true;
+					++iter;
+					c = line[iter];
+
+				} while (c != '/');
+				cout << curr << endl;
+
 				
-			} while (c != '/');
-			cout << curr << endl;
 
+				if (isRoot)
+				{
+					createRepo(curr, repo);
+					isRoot = false;
+				}
+				else if (isFile == true)
+				{
+					cout << "Is a File\n";
 
-			if (isFile == true)
-			{
-				cout << "Is a File\n";
+					//call a create file leaf function to make a file node
+					isFile = false;
+				}
+				else
+				{
+					//call a create subfolder function to create a subfolder leaf node
+				}
 
-				//call a create file leaf function to make a file node
-			}
-			else
-			{
-				//call a create subfolder function to create a subfolder leaf node
+				prev = curr;
+				curr = "";
 			}
 
 		}
@@ -227,3 +257,13 @@ void readFromSource(string sourceFile)
 }
 
 
+void createLeafFile()
+{
+
+}
+
+
+void createLeafFolder()
+{
+
+}
