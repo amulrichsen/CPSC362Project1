@@ -10,3 +10,4 @@ void copyFile(string sourceName, string destName);
 void readFromSource(string sourceFile, Repo repo);
 void createLeafFile();
 void createLeafFolder();
+string ignoreSlash(string temp);
