@@ -58,6 +58,7 @@ void readFromSource(string sourceFile, Repo repo)
 	string line = "";
 	string curr = "";
 	string prev = "";
+	string sname = "";
 	char c;
 	int iter = 0;
 	int slashCount = 0;
@@ -95,7 +96,7 @@ void readFromSource(string sourceFile, Repo repo)
 					c = line[iter];
 
 				} while (c != '/');
-				cout << curr << endl;
+				cout << "current: " << curr << endl;
 
 
 
@@ -107,17 +108,23 @@ void readFromSource(string sourceFile, Repo repo)
 				else if (isFile == true)
 				{
 					cout << "Is a File\n";
+					sname = ignoreSlash(curr);
+					cout << "declared name will be: " << sname << endl;
+
 
 					//call a create file leaf function to make a file node
 					isFile = false;
 				}
 				else
 				{
+					sname = ignoreSlash(curr);
+					cout << "declared name will be: " << sname << endl;
 					//call a create subfolder function to create a subfolder leaf node
 				}
 
-				prev = curr;
+				prev += curr;
 				curr = "";
+				cout << "previous: " << prev << endl;
 			}
 
 		}
@@ -138,4 +145,17 @@ void createLeafFile()
 void createLeafFolder()
 {
 
+}
+
+string ignoreSlash(string temp)
+{
+	string ret = "";
+	
+	for (int i = 0; i < temp.size(); i++)
+	{
+		if (temp[i] != '/')
+			ret += temp[i];
+	}
+
+	return ret;
 }
