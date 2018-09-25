@@ -52,7 +52,7 @@ public:
 		isFileFolder = false;
 	}
 
-	
+
 
 
 	/*
@@ -108,7 +108,7 @@ public:
 
 
 void createRepo(string source, Repo repoName);
-void createFile(string newFile);
+void createManifest(string newFile);
 void copyFile(string sourceName, string destName);
 void readFromSource(string sourceFile);
 
@@ -147,14 +147,14 @@ void createRepo(string source, Repo rpn)
 {
 	rpn.rName = source;
 	rpn.assignManifest(source);
-	createFile(rpn.manifest);
+	createManifest(rpn.manifest);
 
 	//Leaf *emptyLeaf = new Leaf;
 
 
 }
 
-void createFile(string newFile)
+void createManifest(string newFile)
 {
 	ofstream file;
 	file.open(newFile);
@@ -179,10 +179,11 @@ void copyFile(string sourceName, string destName)
 void readFromSource(string sourceFile)
 {
 	string line = "";
-	string temp = "";
+	string curr = "";
+	string prev = "";
 	char c;
 	int iter = 0;
-	bool isSubFolder = false;
+	//bool isSubFolder = true;
 	bool isFile = false;
 	ifstream file(sourceFile);
 
@@ -193,16 +194,29 @@ void readFromSource(string sourceFile)
 			//read the file line into line var and call functions
 			//do-while loop because first char should always be a '/'
 			c = line[iter];
-			cout << "c: " << c << endl;
+			
 			do
 			{
-				temp += c;
+				curr += c;
 				if (c == '.')
 					isFile = true;
 				++iter;
 				c = line[iter];
-				cout << temp << endl;
+				
 			} while (c != '/');
+			cout << curr << endl;
+
+
+			if (isFile == true)
+			{
+				cout << "Is a File\n";
+
+				//call a create file leaf function to make a file node
+			}
+			else
+			{
+				//call a create subfolder function to create a subfolder leaf node
+			}
 
 		}
 		file.close();
