@@ -92,13 +92,18 @@ void readFromSource(string sourceFile, Repo repo)
 					curr += c;
 					if (c == '.')
 						isFile = true;
-					++iter;
+
+					if (iter <= (line.size() - 2))
+					{
+						++iter;
+					}
+					else
+						break;
+
 					c = line[iter];
 
 				} while (c != '/');
 				cout << "current: " << curr << endl;
-
-
 
 				if (isRoot)
 				{
@@ -111,6 +116,7 @@ void readFromSource(string sourceFile, Repo repo)
 					sname = ignoreSlash(curr);
 					cout << "declared name will be: " << sname << endl;
 
+					createLeafFile(sname, prev);
 
 					//call a create file leaf function to make a file node
 					isFile = false;
@@ -124,7 +130,7 @@ void readFromSource(string sourceFile, Repo repo)
 
 				prev += curr;
 				curr = "";
-				cout << "previous: " << prev << endl;
+				//cout << "previous: " << prev << endl;
 			}
 
 		}
@@ -136,15 +142,31 @@ void readFromSource(string sourceFile, Repo repo)
 }
 
 
-void createLeafFile()
+void createLeafFile(string lname, string path)
 {
+	Leaf *nleaf = new Leaf;
+	cout << "about to fetch name\n";
+	nleaf->lName = getName(lname);
+	nleaf->lExt = getExt(lname);
+	nleaf->leafNext = NULL;
+	nleaf->files = NULL;
+	nleaf->isFileFolder = true;
+	nleaf->isSubFolder = false;
 
+	//follow path to point this leaf in the right place
 }
 
 
-void createLeafFolder()
+void createLeafFolder(string lname, string path)
 {
+	Leaf *nleaf = new Leaf;
+	nleaf->lName = lname;
+	nleaf->leafNext = NULL;
+	nleaf->files = NULL;
+	nleaf->isFileFolder = false;
+	nleaf->isSubFolder = true;
 
+	//follow path to point this leaf in the right place
 }
 
 string ignoreSlash(string temp)
@@ -158,4 +180,43 @@ string ignoreSlash(string temp)
 	}
 
 	return ret;
+}
+
+string getExt(string name)
+{
+	string temp = "";
+	int count = 0;
+
+	for (int i = 0; i < name.size(); i++)
+	{
+		if (name[i] == '.')
+		{
+			count = i;
+		}
+	}
+
+	for (count; count < name.size(); count++)
+	{
+		temp += name[count];
+	}
+
+	cout << "ext is: " << temp << endl;
+	return temp;
+}
+
+string getName(string name)
+{
+	string temp = "";
+	int count = 0;
+
+	//cout << "got here\n";
+	
+	while (name[count] != '.')
+	{
+		temp += name[count];
+		count++;
+	}
+
+	cout << "saved name is: " << temp << endl;
+	return temp;
 }
