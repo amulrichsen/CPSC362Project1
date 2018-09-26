@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <filesystem>
 #include "file.h"
 #include "leaf.h"
 
@@ -20,7 +21,7 @@ public:
 
 
 public:
-	Leaf();
+	Leaf(string lname, Leaf* next = NULL);
 
 
 

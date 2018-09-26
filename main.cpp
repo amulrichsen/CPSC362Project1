@@ -24,19 +24,19 @@ int main()
 	and so on...
 	i think this will be easiest for recreation
 	*/
-
+	/*
 	string sourceName;
 	cout << "Enter the name of the source file with extension (.txt): ";
 	cin >> sourceName;
-
-	Repo r1;
+	*/
+	Repo r1(/* PUT FULL PATH TO TEST FOLDER HERE WITH ESCAPED BACKSLASHES */);
 	//Leaf *l2 = new Leaf;
 	//l2->lName = "test";
 	//l1.leafNext = l2;
 
 	//createRepo(sourceName, r1);
 
-	readFromSource(sourceName, r1);
+	//readFromSource(sourceName, r1);
 
 
 	system("pause");

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "leaf.h"
 //#include "artifact.h"
 
 using namespace std;
@@ -9,10 +10,10 @@ class Repo
 public:
 	string rName; //repo name
 	string manifest; //manifest name .txt
-	Repo *head;
+	Leaf *head;
 
 public:
-	Repo();
+	Repo(string name);
 	void assignRepoName(string name);
 	void assignManifest(string name);
 

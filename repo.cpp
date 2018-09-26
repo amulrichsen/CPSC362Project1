@@ -3,8 +3,11 @@
 
 using namespace std;
 
-Repo::Repo() {
-	head = NULL;
+Repo::Repo(string name) {
+	this->rName = name;
+	//Create initial leaf for root folder
+	this->head = new Leaf(name);
+
 }
 void Repo::assignRepoName(string name)
 {

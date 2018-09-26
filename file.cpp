@@ -5,9 +5,10 @@ Params: File Name, File Extnesion
 Sets the class's file name & extnesion
 Also creates an initial artifact and set's the pointer head to it
 */
-File::File(string fName, string fExt) {
+File::File(string fName, string fExt, File* next) {
 	this->fName = fName;
 	this->fExt = fExt;
+	this->next = next;
 	this->artPtr = this->createArt();
 }
 
