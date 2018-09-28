@@ -23,9 +23,6 @@ void Repo::createManifest(string tPath)
 	string fname = tPath + '\\' + p.stem().string() + '\\' + p.stem().string() + "-manifest.txt";
 	cout << "manifest path: " << fname << endl;
 
-	ifstream src(fname, ios::binary);
-	ofstream dst(fname, ios::binary);
-
-	dst << src.rdbuf();
+	copyFile(fname, fname);
 
 }
