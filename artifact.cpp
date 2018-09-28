@@ -18,6 +18,7 @@ Artifact::Artifact(std::string fname, string fExt, string sPath, string tPath, A
 	this->tPath = tPath;
 	this->checkSum = this->createChecksum();
 	copyFile(this->sPath, this->checkSum);
+	copyFile(this->sPath, this->tPath + '\\' + this->name + this->fExtension);
 	this->next = next;
 }
 
