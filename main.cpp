@@ -12,6 +12,8 @@ using namespace std;
 #include "repo.h"
 #include "extra.h"
 
+void copyFile(string sourceName, string destName);
+char getSlash(string path);
 
 int main()
 {	
@@ -28,4 +30,27 @@ int main()
 	system("pause");
 	return 0;
 };
+
+/*	Function to check if we're on widows/Linux by checking if we use / or \
+Note: Should probably find a better way to do this, won't work if we use a relative file path
+*/
+char getSlash(string path)
+{
+	if (path.find('\\') != string::npos)
+		return '\\';
+	else
+		return '/';
+}
+
+/*	Params: Source file's path+name, Destination file's path + name
+Function copies a file from the source to the destination
+Returns: Nothing
+*/
+void copyFile(string sourceName, string destName)
+{
+	ifstream src(sourceName, ios::binary);
+	ofstream dst(destName, ios::binary);
+
+	dst << src.rdbuf();
+}
 
