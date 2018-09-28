@@ -18,8 +18,8 @@ void createLeafFolder();
 
 void createRepo(string source, Repo rpn)
 {
-	rpn.rName = source;
-	rpn.assignManifest(source);
+	//rpn.rName = source;
+	//rpn.assignManifest(source);
 	createManifest(rpn.manifest);
 
 	cout << "repo successful created" << endl;
@@ -219,4 +219,15 @@ string getName(string name)
 
 	cout << "saved name is: " << temp << endl;
 	return temp;
+}
+
+/*	Function to check if we're on widows/Linux by checking if we use / or \
+	Note: Should probably find a better way to do this, won't work if we use a relative file path
+*/
+char getSlash(string path)
+{
+	if (path.find('\\') != string::npos)
+		return '\\';
+	else
+		return '/';
 }

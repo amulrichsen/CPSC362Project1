@@ -13,11 +13,12 @@ public:
 	string manifest; //manifest name .txt
 	string fName; //file name
 	string fExt; //file extension
-	string path; // full path to file
+	string sPath; // full path to source file
+	string tPath; //full path to repo file
 	Artifact* artPtr; //pointer to the most recent artifact file.
 	File* next; //Pointer to the next FILE within the same folder.
 
-	File(string fName, string fExt, string path, File* next = NULL);
+	File(string fName, string fExt, string sPath, string tPath, File* next = NULL);
 	Artifact* createArt(); //create artifact file and copy file info into it
 
 };

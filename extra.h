@@ -13,3 +13,4 @@ void createLeafFolder(string lname, string path);
 string ignoreSlash(string temp);
 string getExt(string name);
 string getName(string name);
+char getSlash(string path);

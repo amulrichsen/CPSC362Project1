@@ -29,7 +29,9 @@ int main()
 	cout << "Enter the name of the source file with extension (.txt): ";
 	cin >> sourceName;
 	*/
-	Repo r1(/* PUT FULL PATH TO TEST FOLDER HERE WITH ESCAPED BACKSLASHES */);
+	string sFolder = "";
+	string tFolder = "";
+	Repo r1(sFolder, tFolder);
 	//Leaf *l2 = new Leaf;
 	//l2->lName = "test";
 	//l1.leafNext = l2;

@@ -11,7 +11,8 @@ class Leaf
 public:
 	string lName; //leaf name
 	string lExt; //leaf extension -- not necessary if subfolder
-	string path;
+	string sPath; //Source Path
+	string tPath; //Target Path
 
 	Leaf *leafNext; //points to next leaf if it is a subfolder
 	File *files; //leaf file linked list -- add files inside of leaf folder
@@ -22,7 +23,7 @@ public:
 
 
 public:
-	Leaf(string lname, string path, Leaf* next = NULL);
+	Leaf(string sPath, string tPath, Leaf* next = NULL);
 
 
 

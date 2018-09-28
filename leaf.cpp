@@ -5,41 +5,43 @@
 
 using namespace std;
 
-Leaf::Leaf(string lname, string path, Leaf* next) {
-	this->lName = lname;
-	this->path = path;
-	//this->lExt = lext;
+Leaf::Leaf(string sPath, string tPath, Leaf* next) {
+	this->sPath = sPath;
+	this->tPath = tPath;
 	this->files = NULL;
 	this->leafNext = next;
-	//isSubFolder = false;
-	//isFileFolder = false;
-
+	//Make a physical folder
+	experimental::filesystem::create_directory(this->tPath);
+	//DEBUG
+	cout << "DEBUG: MADE LEAF FOLDER: " << this->tPath << endl;
 	//Search leaf's path for subfolders/files
-	//string path = lname;
-	for (auto & p : experimental::filesystem::directory_iterator(path))
+	for (auto & p : experimental::filesystem::directory_iterator(sPath))
 	{
+		string path = p.path().string(); // Path
+		string name = p.path().stem().string(); //File/Folder name
+		//We go down to the directory we just made by appending a slash with getSlash() and
+		//adding the source folder's name
+		//ex. FOLDER\NEWFOLDER
+		string tarPath = this->tPath + getSlash(this->tPath) + name;
 		// If iterator is a file -> create file
-		if (p.path().string().find('.') != string::npos)
+		if (path.find('.') != string::npos)
 		{
-			cout << "FILE:" << p.path().filename().string() << endl;
-
-			//NEED FUNCTION TO SPLIT PATH FROM FILE NAME
-			//MAKE NEW FILE() WITH SPLIT FILENAME/EXT WITH FILE(next = previous this->files)
+			//Find file's extension
+			string ext = p.path().extension().string();
+			//If this is the first file, there is no need to link it to the previous
 			if (this->files == NULL)
-				this->files = new File(p.path().stem().string(), p.path().extension().string(), p.path().string());
+				this->files = new File(name, ext, path, tarPath + ext);
 			else
-				this->files = new File(p.path().stem().string(), p.path().extension().string(), p.path().string(),  this->files);
-			//SET this->files TO NEW FILE()
+				this->files = new File(name, ext, path, tarPath + ext,  this->files);
 		}
 		else // Iterator is a folder
 		{
-			cout << "FOLDER:" << p.path().filename().string() << endl;
-			//NEED FUNCTION TO SPLIT PATH FROM FOLDER NAME
 			//MAKE NEW LEAF() WITH SPLIT FOLDERNAME WITH LEAF(next=previous this->leafNext)
+			//If this is the first folder, there is no need to link it to the previous
 			if (this->leafNext == NULL)
-				this->leafNext = new Leaf(p.path().stem().string(), p.path().string());
+				this->leafNext = new Leaf(path, tarPath);
 			else
-				this->leafNext = new Leaf(p.path().stem().string(), p.path().string(), this->leafNext);
+				this->leafNext = new Leaf(path, tarPath, this->leafNext);
 			//SET this->leafNext TO NEW LEAF()
 		}
 	}

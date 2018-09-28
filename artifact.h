@@ -8,14 +8,15 @@ using namespace std;
 class Artifact
 {
 public:
-	Artifact(std::string fname, string fExt, string path, Artifact* next = NULL);
+	Artifact(std::string fname, string fExt, string sPath, string tPath, Artifact* next = NULL);
 	std::string getFileName();
 	std::string Artifact::getArtID();
 	Artifact* next; //Pointer to previous artifact version
 private:
 	std::string name; //File name (without extension)
 	std::string fExtension; //File extension
-	string path; // Full path to file
+	string sPath; // Full source path to file
+	string tPath; //Target path
 	std::string checkSum; //Calculated checksum for file
 	std::string createChecksum();
 

@@ -8,12 +8,13 @@ using namespace std;
 class Repo
 {
 public:
-	string rName; //repo name
+	string sPath; //source path
+	string tPath; //target path
 	string manifest; //manifest name .txt
 	Leaf *head;
 
 public:
-	Repo(string name);
+	Repo(string sPath, string tPath);
 	void assignRepoName(string name);
 	void assignManifest(string name);
 
