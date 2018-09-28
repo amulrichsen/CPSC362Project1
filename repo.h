@@ -15,13 +15,5 @@ public:
 
 public:
 	Repo(string sPath, string tPath);
-	void assignRepoName(string name);
-	void assignManifest(string name);
-
-	//search tree
-	//print
-	//copy
-
-
+	void createManifest(string sPath);
 };
-
