@@ -1,7 +1,8 @@
 #include "repo.h"
 #include "extra.h"
 #include <iostream>
-#include <filesystem>
+#include <fstream>
+#include <experimental/filesystem>
 
 using namespace std;
 
@@ -12,16 +13,19 @@ Repo::Repo(string sPath, string tPath) {
 	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
 	//Create initial leaf for root folder
 	this->head = new Leaf(this->sPath, this->tPath);
+	createManifest(tPath);
 
 }
-void Repo::assignRepoName(string name)
-{
-	//this->rName = name;
-}
 
-void Repo::assignManifest(string name)
+void Repo::createManifest(string tPath)
 {
-	this->manifest = name;
-	this->manifest += "-manifest.txt";
-	cout << "Name of Manifest Text File: " << this->manifest << endl;
+	experimental::filesystem::path p = experimental::filesystem::path(sPath);
+	string fname = tPath + '\\' + p.stem().string() + '\\' + p.stem().string() + "-manifest.txt";
+	cout << "manifest path: " << fname << endl;
+
+	ifstream src(fname, ios::binary);
+	ofstream dst(fname, ios::binary);
+
+	dst << src.rdbuf();
+
 }
