@@ -144,7 +144,7 @@ void readFromSource(string sourceFile, Repo repo)
 
 void createLeafFile(string lname, string path)
 {
-	Leaf *nleaf = new Leaf(lname);
+	Leaf *nleaf = new Leaf(lname, path);
 	cout << "about to fetch name\n";
 	nleaf->lName = getName(lname);
 	nleaf->lExt = getExt(lname);
@@ -159,7 +159,7 @@ void createLeafFile(string lname, string path)
 
 void createLeafFolder(string lname, string path)
 {
-	Leaf *nleaf = new Leaf(lname);
+	Leaf *nleaf = new Leaf(lname, path);
 	nleaf->lName = lname;
 	nleaf->leafNext = NULL;
 	nleaf->files = NULL;

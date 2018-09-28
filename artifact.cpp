@@ -8,12 +8,13 @@ using namespace std;
 2. Calculates checksum and stores it
 3. Creates physical artifact file and renames it
 */
-Artifact::Artifact(std::string fileName, Artifact* next)
+Artifact::Artifact(std::string fname, string fExt, string path, Artifact* next)
 {
-	this->name = fileName;
-	this->fExtension = fileName.substr(fileName.find("."), fileName.length() - 1);
+	this->name = fname;
+	this->fExtension = fExt;
+	this->path = path;
 	this->checkSum = this->createChecksum();
-	copyFile(name, this->checkSum);
+	copyFile(path, this->checkSum);
 	this->next = next;
 }
 
@@ -25,7 +26,7 @@ Returns: String that will become ArtID.
 */
 std::string Artifact::createChecksum()
 {
-	std::ifstream file(this->name);
+	std::ifstream file(this->path);
 	char c;
 	int weights[5] = { 1,3,7,11,17 };
 	int counter = 0;

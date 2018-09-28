@@ -4,9 +4,10 @@
 using namespace std;
 
 Repo::Repo(string name) {
+
 	this->rName = name;
 	//Create initial leaf for root folder
-	this->head = new Leaf(name);
+	this->head = new Leaf(name, name);
 
 }
 void Repo::assignRepoName(string name)
