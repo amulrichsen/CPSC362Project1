@@ -14,34 +14,18 @@ using namespace std;
 
 
 int main()
-{
-	/*source folder will be read in a series of paths
-	i.e:
-	main/
-	main/f1/
-	main/f1/t1.txt
-	main/f1/f2/
-	and so on...
-	i think this will be easiest for recreation
-	*/
-	/*
-	string sourceName;
-	cout << "Enter the name of the source file with extension (.txt): ";
-	cin >> sourceName;
-	*/
+{	
 	string sFolder = "";
 	string tFolder = "";
+
+	cout << "Enter the complete path of the source folder: ";
+	cin >> sFolder;
+	cout << "Enter the complete path of the target folder: ";
+	cin >> tFolder;
+
 	Repo r1(sFolder, tFolder);
-	//Leaf *l2 = new Leaf;
-	//l2->lName = "test";
-	//l1.leafNext = l2;
-
-	//createRepo(sourceName, r1);
-
-	//readFromSource(sourceName, r1);
-
 
 	system("pause");
 	return 0;
-}
+};
 
