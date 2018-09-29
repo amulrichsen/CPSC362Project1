@@ -4,14 +4,19 @@ This is a a copy of a file with a checksum as it's name.
 #pragma once
 #include <string>
 
-#include "gtime.h"
+#include "manifest.h"
+#include "leaf.h"
+
+#include <fstream>
+#include <iostream>
+#include <cmath>
 
 using namespace std;
 
 class Artifact
 {
 public:
-	Artifact(std::string manPath, string fname, string fExt, string sPath, string tPath, Artifact* next = NULL);
+	Artifact(string fname, string fExt, string sPath, string tPath, Manifest* manifest, Artifact* next = NULL);
 	std::string getFileName();
 	std::string getArtID();
 	Artifact* next; //Pointer to previous artifact version
@@ -22,6 +27,7 @@ private:
 	string tPath; //Target path
 	std::string checkSum; //Calculated checksum for file
 	std::string createChecksum();
+	Manifest* manifest;
 
 };
 

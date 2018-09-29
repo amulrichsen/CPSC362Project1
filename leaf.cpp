@@ -1,44 +1,19 @@
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-#include<iostream>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fstream>
-#include <ctime>
-#include <iomanip>
-
 #include "leaf.h"
-#include "gtime.h"
 
 using namespace std;
 
-string genManifest(string tPath, string sPath);
-void writeToManifest(string manPath, string tPath, string msg);
-
-Leaf::Leaf(string manPath, string sPath, string tPath, Leaf* next) {
+Leaf::Leaf(string sPath, string tPath, Manifest* manifest, Leaf* next) {
 	this->sPath = sPath;
 	this->tPath = tPath;
 	this->files = NULL;
 	this->leafNext = next;
+	this->manifest = manifest;
 	//Make a physical folder
 	experimental::filesystem::create_directory(this->tPath);
 	//Now the physical folder is created, generate manifest inside
-	string msg;
-	if (manPath == "")
-	{
-		
-		manPath = genManifest(tPath, sPath);
-		
-		msg = "Manifest Created\t";
-		writeToManifest(manPath, tPath, msg);
-	}
-	else
-	{
-		msg = "Folder Created\t";
-		writeToManifest(manPath, tPath, msg);
-	}
-
+	this->manifest->write(this->tPath, "Folder Created\t");
 	//DEBUG
 	cout << "DEBUG: MADE LEAF FOLDER: " << this->tPath << endl;
 	//Search leaf's path for subfolders/files
@@ -57,18 +32,18 @@ Leaf::Leaf(string manPath, string sPath, string tPath, Leaf* next) {
 			string ext = p.path().extension().string();
 			//If this is the first file, there is no need to link it to the previous
 			if (this->files == NULL)
-				this->files = new File(manPath, name, ext, path, tarPath + ext);
+				this->files = new File(name, ext, path, tarPath + ext, this->manifest);
 			else
-				this->files = new File(manPath, name, ext, path, tarPath + ext, this->files);
+				this->files = new File(name, ext, path, tarPath + ext, this->manifest, this->files);
 		}
 		else // Iterator is a folder
 		{
 			//MAKE NEW LEAF() WITH SPLIT FOLDERNAME WITH LEAF(next=previous this->leafNext)
 			//If this is the first folder, there is no need to link it to the previous
 			if (this->leafNext == NULL)
-				this->leafNext = new Leaf(manPath, path, tarPath);
+				this->leafNext = new Leaf(path, tarPath, this->manifest);
 			else
-				this->leafNext = new Leaf(manPath, path, tarPath, this->leafNext);
+				this->leafNext = new Leaf(path, tarPath, this->manifest, this->leafNext);
 			//SET this->leafNext TO NEW LEAF()
 		}
 	}
@@ -76,32 +51,4 @@ Leaf::Leaf(string manPath, string sPath, string tPath, Leaf* next) {
 }
 
 
-string genManifest(string tPath, string sPath)
-{
-	//creates manifest inside of root repo folder
-	string path = "";
-	path = tPath + '\\' + "manifest.txt";
-
-	copyFile(path, path);
-
-	return path;
-}
-
-void writeToManifest(string manPath, string tPath, string msg)
-{
-	string tStamp = "";
-	ofstream dst(manPath, ios::out | ofstream::app);
-
-	getTime();
-
-	ifstream store("timetrans.txt");
-	getline(store, tStamp);
-	dst << tStamp << " - " << left << setw(30) <<msg << "\t" << tPath << endl;
-	store.close();
-
-	ofstream delContent;
-	delContent.open("timetrans.txt", ofstream::out | ofstream::trunc);
-	delContent.close();
-
-}
 

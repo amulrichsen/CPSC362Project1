@@ -2,10 +2,6 @@
 
 #include<iostream>
 #include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fstream>
-#include <ctime>
 
 using namespace std;
 
@@ -13,7 +9,6 @@ using namespace std;
 #include "file.h"
 #include "leaf.h"
 #include "repo.h"
-#include "gtime.h"
 
 
 void copyFile(string sourceName, string destName);

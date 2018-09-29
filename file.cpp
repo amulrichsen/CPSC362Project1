@@ -1,11 +1,7 @@
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-#include <filesystem>
-#include <iostream>
-
 #include "file.h"
-#include "gtime.h"
-#include "leaf.h"
+
 
 using namespace std;
 
@@ -14,17 +10,16 @@ Params: File Name, File Extnesion
 Sets the class's file name & extnesion
 Also creates an initial artifact and set's the pointer head to it
 */
-File::File(string manPath, string fName, string fExt, string sPath, string tPath, File* next) {
+File::File(string fName, string fExt, string sPath, string tPath, Manifest* manifest, File* next) {
 	this->fName = fName;
 	this->fExt = fExt;
 	this->sPath = sPath;
 	this->tPath = tPath;
 	this->next = next;
-	this->manifest = manPath;
+	this->manifest = manifest;
 	//Create a physical "hidden" directory with the file's name
 	experimental::filesystem::create_directory(this->tPath);
-	string msg = "Created \"Hidden\" File Folder\t";
-	writeToManifest(manPath, tPath, msg);
+	this->manifest->write(this->tPath, "Created \"Hidden\" File Folder\t");
 	cout << "DEBUG: MADE FILE DIRECTORY: " << this->tPath << endl;
 	//Create the artifact
 	//Artifact Class will handle adding backslash itself.
@@ -34,7 +29,7 @@ File::File(string manPath, string fName, string fExt, string sPath, string tPath
 Artifact* File::createArt()
 {
 	if (this->artPtr)
-		return new Artifact(manifest, this->fName, this->fExt, this->sPath, this->tPath, this->artPtr);
+		return new Artifact(this->fName, this->fExt, this->sPath, this->tPath, this->manifest, this->artPtr);
 	else
-		return new Artifact(manifest, this->fName, this->fExt, this->sPath, this->tPath);
+		return new Artifact(this->fName, this->fExt, this->sPath, this->tPath, this->manifest);
 }

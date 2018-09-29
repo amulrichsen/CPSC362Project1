@@ -1,13 +1,13 @@
 #pragma once
 #include <string>
+#include <iostream>
+#include <experimental/filesystem>
 
 #include "leaf.h"
-#include "gtime.h"
+#include "manifest.h"
 
 using namespace std;
 
-string genManifest(string tPath, string sPath);
-void writeToManifest(string manPath, string tPath, string msg);
 char getSlash(string path);
 
 class Repo
@@ -17,6 +17,7 @@ public:
 	string tPath; //target path
 	string manPath = ""; //manifest path
 	Leaf *head;
+	Manifest* manifest;
 
 public:
 	Repo(string sPath, string tPath);

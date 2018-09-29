@@ -1,12 +1,6 @@
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-#include <fstream>
-#include <iostream>
-#include <cmath>
-
 #include "artifact.h"
-#include "gtime.h"
-#include "leaf.h"
 
 using namespace std;
 
@@ -15,19 +9,18 @@ using namespace std;
 2. Calculates checksum and stores it
 3. Creates physical artifact file and renames it
 */
-Artifact::Artifact(std::string manPath, string fname, string fExt, string sPath, string tPath, Artifact* next)
+Artifact::Artifact(string fname, string fExt, string sPath, string tPath, Manifest* manifest, Artifact* next)
 {
 	this->name = fname;
 	this->fExtension = fExt;
 	this->sPath = sPath;
 	this->tPath = tPath;
 	this->checkSum = this->createChecksum();
+	this->manifest = manifest;
 	copyFile(this->sPath, this->checkSum);
-	string msg = "Artifact Created\t";
-	writeToManifest(manPath, tPath, msg);
+	this->manifest->write(this->tPath, "Artifact Created\t");
 	copyFile(this->sPath, this->tPath + '\\' + this->name + this->fExtension);
-	msg = "File Copied to Repo\t";
-	writeToManifest(manPath, tPath, msg);
+	this->manifest->write(this->tPath, "File Copied to Repo\t");
 	this->next = next;
 
 	

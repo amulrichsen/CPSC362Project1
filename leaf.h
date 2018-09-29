@@ -1,15 +1,14 @@
 #pragma once
 #include <string>
-#include <filesystem>
+#include <experimental/filesystem>
+#include<iostream>
 
 #include "file.h"
 #include "leaf.h"
-#include "gtime.h"
+#include "manifest.h"
 
 using namespace std;
 
-string genManifest(string tPath, string sPath);
-void writeToManifest(string manPath, string tPath, string msg);
 char getSlash(string path);
 
 class Leaf
@@ -21,7 +20,9 @@ public:
 	string tPath; //Target Path
 
 	Leaf *leafNext; //points to next leaf if it is a subfolder
-	File *files; //leaf file linked list -- add files inside of leaf folder
+	class File *files; //leaf file linked list -- add files inside of leaf folder
+
+	Manifest* manifest; //Pointer to the repo's manifest file
 
 	bool isSubFolder; //tells us if it is a subfolder
 	bool isFileFolder; //tells us if it a secret file folder
@@ -29,6 +30,6 @@ public:
 
 
 public:
-	Leaf(string manPath, string sPath, string tPath, Leaf* next = NULL);
+	Leaf(string sPath, string tPath, Manifest* manifest, Leaf* next = NULL);
 
 };
