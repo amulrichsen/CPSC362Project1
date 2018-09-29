@@ -1,8 +1,18 @@
+/*	Repo Functions
+	Contains functions for the Repo Class
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
+*/
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
-
 #include "repo.h"
-
-
 using namespace std;
 
 Repo::Repo(string sPath, string tPath) {

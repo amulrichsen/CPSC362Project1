@@ -1,3 +1,16 @@
+/*	File Functions
+	This contains the functions for the File Class
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
+*/
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
 #include "file.h"
@@ -20,12 +33,14 @@ File::File(string fName, string fExt, string sPath, string tPath, Manifest* mani
 	//Create a physical "hidden" directory with the file's name
 	experimental::filesystem::create_directory(this->tPath);
 	this->manifest->write(this->tPath, "Created \"Hidden\" File Folder\t");
-	cout << "DEBUG: MADE FILE DIRECTORY: " << this->tPath << endl;
 	//Create the artifact
 	//Artifact Class will handle adding backslash itself.
 	this->artPtr = this->createArt();
 }
 
+/*	Params: None
+	Creates the Artifact object and adds it to our File Object's linked list
+*/
 Artifact* File::createArt()
 {
 	if (this->artPtr)

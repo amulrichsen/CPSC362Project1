@@ -1,20 +1,38 @@
+/*	Main Functions
+	Contains the Main and global scope functions
+	This is the head of the program.
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
+*/
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
 #include<iostream>
 #include <string>
-
-using namespace std;
 
 #include "artifact.h"
 #include "file.h"
 #include "leaf.h"
 #include "repo.h"
 
+using namespace std;
 
+
+//Prototypes
 void copyFile(string sourceName, string destName);
 char getSlash(string path);
 
-
+/*	Main Function
+	Asks the user for the project tree folder and target folder
+	Then creates the repo
+*/
 int main()
 {	
 
@@ -46,8 +64,7 @@ void copyFile(string sourceName, string destName)
 	dst << src.rdbuf();
 }
 
-/*	Function to check if we're on widows/Linux by checking if we use / or \
-Note: Should probably find a better way to do this, won't work if we use a relative file path
+/*	Function to check if we're using a Windows absolute path by checking if we use / or \
 */
 char getSlash(string path)
 {

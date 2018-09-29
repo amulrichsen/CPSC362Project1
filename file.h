@@ -1,5 +1,15 @@
 /*	File Class
-This is a "folder" containing a file's artifacts
+	This class creates a "hidden" folder containing a file's artifacts
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
 */
 #pragma once
 #include "artifact.h"

@@ -1,3 +1,16 @@
+/*	Leaf Class
+	This replicates a folder from the given path.
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
+*/
 #pragma once
 #include <string>
 #include <experimental/filesystem>
@@ -23,11 +36,6 @@ public:
 	class File *files; //leaf file linked list -- add files inside of leaf folder
 
 	Manifest* manifest; //Pointer to the repo's manifest file
-
-	bool isSubFolder; //tells us if it is a subfolder
-	bool isFileFolder; //tells us if it a secret file folder
-
-
 
 public:
 	Leaf(string sPath, string tPath, Manifest* manifest, Leaf* next = NULL);

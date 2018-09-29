@@ -1,3 +1,16 @@
+/*	Artifact Functions
+	Contains the functions for the Artifact class
+
+	Authors:
+	Anette Ulrichsen
+	amulrichsen@csu.fullerton.edu
+
+	Hector Rodriguez
+	hrod93@csu.fullerton.edu
+
+	John Margis
+	margisj@csu.fullerton.edu
+*/
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
 #include "artifact.h"
@@ -17,10 +30,9 @@ Artifact::Artifact(string fname, string fExt, string sPath, string tPath, Manife
 	this->tPath = tPath;
 	this->checkSum = this->createChecksum();
 	this->manifest = manifest;
+
 	copyFile(this->sPath, this->checkSum);
-	this->manifest->write(this->tPath, "Artifact Created\t");
-	copyFile(this->sPath, this->tPath + '\\' + this->name + this->fExtension);
-	this->manifest->write(this->tPath, "File Copied to Repo\t");
+	this->manifest->write(this->checkSum, "Artifact Created\t");
 	this->next = next;
 
 	
