@@ -16,6 +16,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+
 #include "manifest.h"
 #include "leaf.h"
 
@@ -25,8 +26,6 @@ class Artifact
 {
 public:
 	Artifact(string fname, string fExt, string sPath, string tPath, Manifest* manifest, Artifact* next = NULL);
-	std::string getFileName(); //Returns the filename
-	std::string getArtID(); //Returns the ArtifactID
 	Artifact* next; //Pointer to previous artifact version
 private:
 	std::string name; //File name (without extension)
@@ -36,7 +35,6 @@ private:
 	std::string checkSum; //Calculated checksum for file
 	std::string createChecksum(); //Creates the checksum
 	Manifest* manifest; //Pointer to the manifest
-
 };
 
 //Required Prototypes:

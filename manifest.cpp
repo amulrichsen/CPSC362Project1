@@ -35,7 +35,6 @@ void Manifest::write(string tPath, string msg)
 	getTime();
 	dst << this->tStamp << " - " << left << setw(30) << msg << "\t" << tPath << "\n";
 	dst.close();
-
 }
 
 /*	Params: Buffer

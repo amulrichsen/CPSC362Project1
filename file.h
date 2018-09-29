@@ -12,15 +12,15 @@
 	margisj@csu.fullerton.edu
 */
 #pragma once
-#include "artifact.h"
-#include "leaf.h"
 
 #include <string>
 #include <experimental/filesystem>
 #include <iostream>
 
-using namespace std;
+#include "artifact.h"
+#include "leaf.h"
 
+using namespace std;
 
 char getSlash(string path);
 
@@ -37,5 +37,4 @@ public:
 
 	File(string fName, string fExt, string sPath, string tPath, Manifest* manifest, File* next = NULL);
 	Artifact* createArt(); //create artifact file and copy file info into it
-
 };

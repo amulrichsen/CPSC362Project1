@@ -30,5 +30,6 @@ public:
 	void write(string tPath, string msg); //Writes to the manifest file
 };
 
+//Required Prototypes
 void copyFile(string sourceName, string destName);
 char getSlash(string path);

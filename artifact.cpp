@@ -34,8 +34,6 @@ Artifact::Artifact(string fname, string fExt, string sPath, string tPath, Manife
 	copyFile(this->sPath, this->checkSum);
 	this->manifest->write(this->checkSum, "Artifact Created\t");
 	this->next = next;
-
-	
 }
 
 
@@ -52,9 +50,11 @@ std::string Artifact::createChecksum()
 	int counter = 0;
 	double checkSum = 0;
 	int fileSize = 0;
-	double wrap = (pow(2, 31) - 1);
+	double wrap = (pow(2, 31) - 1); // Wrap around if above this
+	//Iterate through characters within the file
 	while (file.get(c))
 	{
+		//Iterate through the weights
 		if (counter > 4)
 			counter = 0;
 		checkSum = fmod(checkSum + (int)c * weights[counter], wrap);
@@ -64,22 +64,4 @@ std::string Artifact::createChecksum()
 	file.close();
 	//The file name is the target path + \\ or / + checkSum string + -L + fileSize + extension
 	return this->tPath + getSlash(tPath) + to_string((int)checkSum) + "-L" + std::to_string(fileSize) + this->fExtension;
-}
-
-/*	Params: None
-Function returns the Artifact's original file name
-Returns: File name string
-*/
-std::string Artifact::getFileName()
-{
-	return this->name + this->fExtension;
-}
-
-/*	Params: None
-Function returns the Artifact's completed checksum name
-Returns: ArtID string
-*/
-std::string Artifact::getArtID()
-{
-	return this->checkSum;
 }

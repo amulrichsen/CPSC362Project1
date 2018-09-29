@@ -22,8 +22,6 @@
 
 using namespace std;
 
-char getSlash(string path);
-
 class Leaf
 {
 public:
@@ -36,8 +34,10 @@ public:
 	class File *files; //leaf file linked list -- add files inside of leaf folder
 
 	Manifest* manifest; //Pointer to the repo's manifest file
-
 public:
 	Leaf(string sPath, string tPath, Manifest* manifest, Leaf* next = NULL);
 
 };
+
+//Required Prototypes
+char getSlash(string path);
