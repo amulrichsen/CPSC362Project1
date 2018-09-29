@@ -13,7 +13,7 @@ class Artifact
 public:
 	Artifact(std::string manPath, string fname, string fExt, string sPath, string tPath, Artifact* next = NULL);
 	std::string getFileName();
-	std::string Artifact::getArtID();
+	std::string getArtID();
 	Artifact* next; //Pointer to previous artifact version
 private:
 	std::string name; //File name (without extension)

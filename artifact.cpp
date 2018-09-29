@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 #include "artifact.h"
 #include "gtime.h"
@@ -44,19 +45,20 @@ std::string Artifact::createChecksum()
 	char c;
 	int weights[5] = { 1,3,7,11,17 };
 	int counter = 0;
-	int checkSum = 0;
+	double checkSum = 0;
 	int fileSize = 0;
+	double wrap = (pow(2, 31) - 1);
 	while (file.get(c))
 	{
 		if (counter > 4)
 			counter = 0;
-		checkSum += ((int)c * weights[counter]);
+		checkSum = fmod(checkSum + (int)c * weights[counter], wrap);
 		counter++;
 		fileSize++;
 	}
 	file.close();
 	//The file name is the target path + \\ or / + checkSum string + -L + fileSize + extension
-	return this->tPath + getSlash(tPath) + to_string(checkSum) + "-L" + std::to_string(fileSize) + this->fExtension;
+	return this->tPath + getSlash(tPath) + to_string((int)checkSum) + "-L" + std::to_string(fileSize) + this->fExtension;
 }
 
 /*	Params: None

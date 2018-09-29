@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <ctime>
+#include <iomanip>
 
 #include "leaf.h"
 #include "gtime.h"
@@ -89,14 +90,13 @@ string genManifest(string tPath, string sPath)
 void writeToManifest(string manPath, string tPath, string msg)
 {
 	string tStamp = "";
-	ofstream dst(manPath, ios::binary | ofstream::app);
-	dst << msg << "\t" << tPath << "\t";
+	ofstream dst(manPath, ios::out | ofstream::app);
 
 	getTime();
 
 	ifstream store("timetrans.txt");
 	getline(store, tStamp);
-	dst << "Time Stamp " << tStamp << "\n";
+	dst << tStamp << " - " << left << setw(30) <<msg << "\t" << tPath << endl;
 	store.close();
 
 	ofstream delContent;
