@@ -12,19 +12,11 @@ Manifest::Manifest(string path)
 
 void Manifest::write(string tPath, string msg)
 {
-	string tStamp = "";
-	ofstream dst(this->path, ofstream::out | ofstream::app);
-
+	ofstream dst;
+	dst.open(this->path, ofstream::app);
 	getTime();
-
-	ifstream store("timetrans.txt");
-	getline(store, tStamp);
-	dst << tStamp << " - " << left << setw(30) << msg << "\t" << tPath << endl;
-	store.close();
-
-	ofstream delContent;
-	delContent.open("timetrans.txt", ofstream::out | ofstream::trunc);
-	delContent.close();
+	dst << this->tStamp << " - " << left << setw(30) << msg << "\t" << tPath << "\n";
+	dst.close();
 
 }
 
@@ -38,9 +30,5 @@ char* Manifest::getDT(char *buff)
 void Manifest::getTime()
 {
 	char buff[32];
-	fstream file;
-	file.open("timetrans.txt", fstream::out | fstream::app);
-
-	file << getDT(buff);
-	file.close();
+	this->tStamp = getDT(buff);
 }

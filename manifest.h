@@ -11,6 +11,7 @@ private:
 	string path;
 	void getTime();
 	static char *getDT(char *buff);
+	string tStamp;
 public:
 	Manifest(string path);
 	void write(string tPath, string msg);
