@@ -35,6 +35,32 @@ void Repo::checkIn(string sPath, string tPath) {
 }
 void Repo::checkOut(string sPath, string tPath, string manifest) {
 	//creates a repo using a given manifest
+	//Open the manifest to parse
+	ifstream file(sPath + '/' + manifest);
+	string line;
+	int sPathLen = sPath.length();
+	//Parse line by line
+	while (getline(file, line))
+	{
+		if (line[26] == 'F')
+		{
+			// Extract the folder name from the manifest line
+			string fName = line.substr(57, sPathLen - 1);
+			fName.erase(fName.begin(), fName.end() - sPathLen);
+			// Create a directory at the tPath + folder name
+			experimental::filesystem::create_directory(this->tPath+'/'+fName);
+			
+		}
+
+		else if (line[26] == 'C')
+		{
+			// Extract the file name from the manifest line
+			string fName = line.substr(57, sPathLen - 1);
+			fName.erase(fName.begin(), fName.end() - sPathLen);
+
+		}
+
+	}
 }
 
 
