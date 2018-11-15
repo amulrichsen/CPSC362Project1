@@ -5,13 +5,13 @@
 	Anette Ulrichsen
 	amulrichsen@csu.fullerton.edu
 
-	Hector Rodriguez
-	hrod93@csu.fullerton.edu
-
 	John Margis
 	margisj@csu.fullerton.edu
 */
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <time.h>
 
 #include "manifest.h"
 
@@ -19,8 +19,13 @@
 	1. Creates an empty manifest file inside the root */
 Manifest::Manifest(string path)
 {
+	int randVar;
+
+	srand(time(NULL));
+	randVar = rand() % 10000 + 1;
+
 	//creates manifest inside of root repo folder
-	this->path = path + getSlash(path) + "manifest.txt";
+	this->path = path + getSlash(path) + to_string(randVar) + "-manifest.txt";
 	copyFile(this->path, this->path);
 	this->write(this->path, "Manifest Created\t");
 }

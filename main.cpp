@@ -6,9 +6,6 @@
 	Anette Ulrichsen
 	amulrichsen@csu.fullerton.edu
 
-	Hector Rodriguez
-	hrod93@csu.fullerton.edu
-
 	John Margis
 	margisj@csu.fullerton.edu
 */
@@ -16,6 +13,7 @@
 
 #include<iostream>
 #include <string>
+#include <filesystem>
 
 #include "artifact.h"
 #include "file.h"
@@ -28,6 +26,8 @@ using namespace std;
 //Prototypes
 void copyFile(string sourceName, string destName);
 char getSlash(string path);
+void insertLabel(string mPath, string label);
+string searchLabels(string sPath, string oldLabel);
 
 /*	Main Function
 	Asks the user for the project tree folder and target folder
@@ -35,22 +35,135 @@ char getSlash(string path);
 */
 int main()
 {	
+	string comm;
+	string label;
+	string lpath;
 
-	string sFolder = "";
-	string tFolder = "";
+	cout << "COMMANDS: \n";
+	cout << "create\n";
+	cout << "check in\n";
+	cout << "check out\n";
+	cout << "label\n\n";
+	cout << "ENTER A COMMAND: " << endl;
+	cin >> comm;
 
-	cout << "Enter the complete path of the source folder: ";
-	cin >> sFolder;
-	cout << "Enter the complete path of the target folder: ";
-	cin >> tFolder;
+	if (comm == "create")
+	{
+		string sFolder = "";
+		string tFolder = "";
 
-	Repo r1(sFolder, tFolder);
+		cout << "Enter the complete path of the source folder: ";
+		cin >> sFolder;
+		cout << "Enter the complete path of the target folder: ";
+		cin >> tFolder;
+
+		Repo r1(sFolder, tFolder);
+	}
+
+	else if (comm == "label")
+	{
+		char ch;
+		string fPath;
+		string maniName, newLabel, oldLabel;
+
+		//find the path to look in
+		cout << "Enter repository path: ";
+		cin >> fPath;
+
+		cout << endl;
+		cout << "M = add label via manifest name\n";
+		cout << "L = add label via existing label\n";
+		cin >> ch;
+
+		if (ch == 'M')
+		{
+			cout << "Enter manifest name (including \".txt\"): ";
+			cin >> maniName;
+			cout << "Enter new label name: ";
+			cin >> newLabel;
+
+			//append the manifest name to the file path
+			fPath += getSlash(fPath) + maniName;
+			cout << "DEBUG: new file path is = " << fPath << endl;
+
+			insertLabel(fPath, newLabel);
+			cout << "DEBUG: added label\n";
+
+		}
+
+		else if (ch == 'L')
+		{
+			cout << "Enter existing label name: ";
+			cin >> oldLabel;
+			cout << "Enter new label name: ";
+			cin >> newLabel;
+
+			string mPath = searchLabels(fPath, oldLabel);
+			insertLabel(mPath, newLabel);
+
+		}
+	}
 
 	system("pause");
 	return 0;
 };
 
+string searchLabels(string sPath, string oldLabel)
+{
+	vector<string> existingFiles;
+	string temp;
+	ifstream myfile;
+	string line;
+	string foundMani = "empty";
+	bool found = false;
 
+	for (auto& p: experimental::filesystem::directory_iterator(sPath))
+	{
+		//cout << "DEBUG: " << p << endl;
+		temp = p.path().string();
+		existingFiles.push_back(temp);
+	}
+
+	for (int i = 0; i < existingFiles.size() && !found; i++)
+	{
+		//cout << existingFiles[i] << endl;
+		if (existingFiles[i].find("manifest.txt"))
+		{
+			myfile.open(existingFiles[i]);
+			while (getline(myfile, line))
+			{
+				if (line[0] == 'L')
+				{
+					line.erase(0, 3);
+					cout << "DEBUG: label name: " << line << endl;
+
+					if (line.compare(oldLabel) == 0)
+					{
+						foundMani = existingFiles[i];
+						found = true;
+						cout << "DEBUG: break out of while loop" << endl;
+						break;
+					}
+				}
+			}
+			myfile.close();
+
+		}
+	}
+
+	if (!found)
+		cout << "Manifest with label not found\n";
+	return foundMani;
+}
+
+//inserts a label into a manifest given the manifest path (including .txt)
+void insertLabel(string mPath, string label)
+{
+	ofstream myfile;
+	myfile.open(mPath, ios::app);
+	myfile << "L: " << label << "\n";
+	myfile.close();
+}
 
 /*	Params: Source file's path+name, Destination file's path + name
 Function copies a file from the source to the destination
@@ -73,6 +186,3 @@ char getSlash(string path)
 	else
 		return '/';
 }
-
-
-
