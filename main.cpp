@@ -41,8 +41,8 @@ int main()
 
 	cout << "COMMANDS: \n";
 	cout << "create\n";
-	cout << "check in\n";
-	cout << "check out\n";
+	cout << "check-in\n";
+	cout << "check-out\n";
 	cout << "label\n\n";
 	cout << "ENTER A COMMAND: " << endl;
 	cin >> comm;
@@ -57,7 +57,8 @@ int main()
 		cout << "Enter the complete path of the target folder: ";
 		cin >> tFolder;
 
-		Repo r1(sFolder, tFolder);
+		Repo r1;
+		r1.create(sFolder, tFolder);
 	}
 
 	else if (comm == "label")
@@ -102,6 +103,25 @@ int main()
 			insertLabel(mPath, newLabel);
 
 		}
+	}
+
+	else if (comm == "check-out")
+	{
+
+		string sFolder = "";
+		string tFolder = "";
+		string manifest = "";
+
+		cout << "Enter the complete path of the source folder: ";
+		cin >> sFolder;
+		cout << "Enter the complete path of the target folder: ";
+		cin >> tFolder;
+		cout << "Enter the manifest name: "; // NEED TO ADD SEARCH FOR BY LABEL HERE
+		cin >> manifest;
+
+		Repo r1;
+		r1.checkOut(sFolder, tFolder, manifest);
+
 	}
 
 	system("pause");
