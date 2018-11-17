@@ -36,6 +36,8 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	//creates a repo using a given manifest
 	this->sPath = sPath;
 	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
+	this->manifest = new Manifest(tPath);
+	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "CHECK-OUT ARGS:\t");
 
 	// Create root directory
 	experimental::filesystem::create_directory(this->tPath);
@@ -58,6 +60,8 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 			fName.erase(fName.begin(), fName.begin() + this->sPath.length());
 			// Create a directory at the tPath + folder name
 			experimental::filesystem::create_directory(this->tPath + fName);
+			this->manifest->write(experimental::filesystem::path(this->tPath + fName).string(), "CHECKOUT: Folder\t");
+
 
 		}
 
@@ -72,6 +76,8 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 			string aPath = line.substr(57, line.length() - 1);
 			// Copy the artifact and rename it to its original name
 			copyFile(aPath, this->tPath + '/' + fName);
+			this->manifest->write(experimental::filesystem::path(this->tPath + fName).string(), "CHECKOUT: File\t");
+
 
 		}
 
