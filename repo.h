@@ -6,9 +6,6 @@
 	Anette Ulrichsen
 	amulrichsen@csu.fullerton.edu
 
-	Hector Rodriguez
-	hrod93@csu.fullerton.edu
-
 	John Margis
 	margisj@csu.fullerton.edu
 */
