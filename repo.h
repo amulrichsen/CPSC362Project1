@@ -12,6 +12,8 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <experimental/filesystem>
 
 #include "leaf.h"
@@ -28,7 +30,6 @@ public:
 	Manifest* manifest; //Manifest File
 
 public:
-	Repo(string sPath, string tPath);
 	void create(string sPath, string tPath); //creates a repo using a given source tree
 	void checkIn(string sPath, string tPath); //updates an existing project tree
 	void checkOut(string sPath, string tPath, string manifest); //creates a repo using a given manifest
