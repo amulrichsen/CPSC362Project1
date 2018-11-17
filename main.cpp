@@ -1,13 +1,13 @@
 /*	Main Functions
-	Contains the Main and global scope functions
-	This is the head of the program.
+Contains the Main and global scope functions
+This is the head of the program.
 
-	Authors:
-	Anette Ulrichsen
-	amulrichsen@csu.fullerton.edu
+Authors:
+Anette Ulrichsen
+amulrichsen@csu.fullerton.edu
 
-	John Margis
-	margisj@csu.fullerton.edu
+John Margis
+margisj@csu.fullerton.edu
 */
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
@@ -30,19 +30,19 @@ void insertLabel(string mPath, string label);
 string searchLabels(string sPath, string oldLabel);
 
 /*	Main Function
-	Asks the user for the project tree folder and target folder
-	Then creates the repo
+Asks the user for the project tree folder and target folder
+Then creates the repo
 */
 int main()
-{	
+{
 	string comm;
 	string label;
 	string lpath;
 
 	cout << "COMMANDS: \n";
 	cout << "create\n";
-	cout << "check in\n";
-	cout << "check out\n";
+	cout << "check-in\n";
+	cout << "check-out\n";
 	cout << "label\n\n";
 	cout << "ENTER A COMMAND: " << endl;
 	cin >> comm;
@@ -57,7 +57,8 @@ int main()
 		cout << "Enter the complete path of the target folder: ";
 		cin >> tFolder;
 
-		Repo r1(sFolder, tFolder);
+		Repo r1;
+		r1.create(sFolder, tFolder);
 	}
 
 	else if (comm == "label")
@@ -104,6 +105,41 @@ int main()
 		}
 	}
 
+	else if (comm == "check-out")
+	{
+
+		string sFolder = "";
+		string tFolder = "";
+		string manifest = "";
+
+		cout << "Enter the complete path of the source folder: ";
+		cin >> sFolder;
+		cout << "Enter the complete path of the target folder: ";
+		cin >> tFolder;
+		cout << "Enter the manifest name: "; // NEED TO ADD SEARCH FOR BY LABEL HERE
+		cin >> manifest;
+
+		Repo r1;
+		r1.checkOut(sFolder, tFolder, manifest);
+
+	}
+
+	else if (comm == "check-in")
+	{
+		string source = "";
+		string tar = "";
+
+		cout << "Enter the complete path of the source project: ";
+		cin >> source;
+		cout << "Enter the complete path of the repository: ";
+		cin >> tar;
+		
+
+		Repo r2;
+		r2.create(source, tar);
+
+	}
+
 	system("pause");
 	return 0;
 };
@@ -117,7 +153,7 @@ string searchLabels(string sPath, string oldLabel)
 	string foundMani = "empty";
 	bool found = false;
 
-	for (auto& p: experimental::filesystem::directory_iterator(sPath))
+	for (auto& p : experimental::filesystem::directory_iterator(sPath))
 	{
 		//cout << "DEBUG: " << p << endl;
 		temp = p.path().string();
@@ -186,3 +222,4 @@ char getSlash(string path)
 	else
 		return '/';
 }
+
