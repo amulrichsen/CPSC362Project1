@@ -1,15 +1,15 @@
 /*	Repo Functions
-	Contains functions for the Repo Class
+Contains functions for the Repo Class
 
-	Authors:
-	Anette Ulrichsen
-	amulrichsen@csu.fullerton.edu
+Authors:
+Anette Ulrichsen
+amulrichsen@csu.fullerton.edu
 
-	Hector Rodriguez
-	hrod93@csu.fullerton.edu
+Hector Rodriguez
+hrod93@csu.fullerton.edu
 
-	John Margis
-	margisj@csu.fullerton.edu
+John Margis
+margisj@csu.fullerton.edu
 */
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 #include "repo.h"
@@ -23,7 +23,7 @@ void Repo::create(string sPath, string tPath) {
 	//Create Manifest
 	this->manifest = new Manifest(tPath);
 	//Create initial leaf for root folder
-	this->head = new Leaf(this->sPath, this->tPath, this->manifest);	
+	this->head = new Leaf(this->sPath, this->tPath, this->manifest);
 }
 void Repo::checkIn(string sPath, string tPath) {
 	//updates an existing project tree
@@ -31,6 +31,8 @@ void Repo::checkIn(string sPath, string tPath) {
 
 // Creates a copy of a repo using it's manifest
 void Repo::checkOut(string sPath, string tPath, string manifest) {
+	bool cont = true;
+	
 	//creates a repo using a given manifest
 	this->sPath = sPath;
 	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
@@ -42,16 +44,21 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	ifstream file(this->sPath + '/' + manifest);
 	string line;
 	//Parse line by line
-	while (getline(file, line))
+	while ((getline(file, line)) && cont)
 	{
-		if (line[26] == 'F')
+		if (line[0] == 'L')
+		{
+			cont = false;
+		}
+		
+		else if (line[26] == 'F')
 		{
 			// Extract the folder name from the manifest line
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + this->sPath.length());
 			// Create a directory at the tPath + folder name
-			experimental::filesystem::create_directory(this->tPath+fName);
-			
+			experimental::filesystem::create_directory(this->tPath + fName);
+
 		}
 
 		else if (line[26] == 'C')
@@ -67,6 +74,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 			copyFile(aPath, this->tPath + '/' + fName);
 
 		}
+
 
 	}
 }
