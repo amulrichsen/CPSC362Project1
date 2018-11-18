@@ -116,7 +116,7 @@ int main()
 		cin >> sFolder;
 		cout << "Enter the complete path of the target folder: ";
 		cin >> tFolder;
-		cout << "Enter the manifest name: "; // NEED TO ADD SEARCH FOR BY LABEL HERE
+		cout << "Enter the manifest name or label: ";
 		cin >> manifest;
 
 		Repo r1;
@@ -139,6 +139,7 @@ int main()
 		r2.checkIn(source, tar);
 
 	}
+
 
 	system("pause");
 	return 0;
@@ -171,13 +172,10 @@ string searchLabels(string sPath, string oldLabel)
 				if (line[0] == 'L')
 				{
 					line.erase(0, 3);
-					cout << "DEBUG: label name: " << line << endl;
-
 					if (line.compare(oldLabel) == 0)
 					{
 						foundMani = existingFiles[i];
 						found = true;
-						cout << "DEBUG: break out of while loop" << endl;
 						break;
 					}
 				}
