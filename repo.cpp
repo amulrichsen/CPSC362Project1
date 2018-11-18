@@ -20,6 +20,7 @@ void Repo::create(string sPath, string tPath) {
 	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
 	//Create Manifest
 	this->manifest = new Manifest(tPath);
+	this->manifest->write(sPath + ",\t" + tPath, "CREATE-REPO ARGS:\t");
 	//Create initial leaf for root folder
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest);
 }
@@ -83,7 +84,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 
 		}
 
-		else if (line[26] == 'C')
+		else if (line[26] == 'C' && line[27] == 'r')
 		{
 			// Extract the file name from the manifest line
 			string fPath = line.substr(57, line.length() - 1);
