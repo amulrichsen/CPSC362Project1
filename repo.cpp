@@ -25,34 +25,54 @@ void Repo::create(string sPath, string tPath) {
 }
 void Repo::checkIn(string sPath, string tPath) {
 	//updates an existing project tree
+	this->sPath = sPath;
+	//Append root folder name to the target path
+	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
+	//Create Manifest
+	this->manifest = new Manifest(tPath);
+	this->manifest->write(sPath + ",\t" + tPath, "CHECK-IN ARGS:\t");
+	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
+
 }
 
 // Creates a copy of a repo using it's manifest
 void Repo::checkOut(string sPath, string tPath, string manifest) {
-	bool cont = true;
 	
 	//creates a repo using a given manifest
 	this->sPath = sPath;
-	this->tPath = tPath + getSlash(this->sPath) + experimental::filesystem::path(sPath).stem().string();
-	this->manifest = new Manifest(tPath);
+	string rootName;
+	// Set the source path to the project tree root folder within the source path
+	for (auto & p : experimental::filesystem::directory_iterator(sPath))
+	{
+		string temp = p.path().string();
+		if (temp.find('.') == string::npos)
+		{
+			this->sPath = temp;
+			rootName = p.path().stem().string();
+		}
+	}
+	this->tPath = tPath;
+
+	// Find correct manifest to parse from
+	if (manifest.find(".txt") == string::npos)
+		manifest = experimental::filesystem::path(searchLabels(sPath, manifest)).stem().string() + experimental::filesystem::path(searchLabels(sPath, manifest)).extension().string();
+	// Create a manifest one folder above the target project tree root folder
+	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "CHECK-OUT ARGS:\t");
 
-	// Create root directory
-	experimental::filesystem::create_directory(this->tPath);
 
 	// Open the manifest to parse
-	ifstream file(this->sPath + '/' + manifest);
+	ifstream file(sPath + '/' + manifest);
 	string line;
 	//Parse line by line
-	while ((getline(file, line)) && cont)
+	while (getline(file, line))
 	{
 		if (line[0] == 'L')
-		{
-			cont = false;
-		}
+			cout << "break" << endl;
 		
 		else if (line[26] == 'F')
 		{
+			cout << line << endl;
 			// Extract the folder name from the manifest line
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + this->sPath.length());

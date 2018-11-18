@@ -136,7 +136,7 @@ int main()
 		
 
 		Repo r2;
-		r2.create(source, tar);
+		r2.checkIn(source, tar);
 
 	}
 

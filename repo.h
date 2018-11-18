@@ -39,3 +39,4 @@ public:
 
 //Required Prototypes
 char getSlash(string path);
+string searchLabels(string sPath, string oldLabel);
