@@ -38,7 +38,7 @@ void Repo::checkIn(string sPath, string tPath) {
 
 // Creates a copy of a repo using it's manifest
 void Repo::checkOut(string sPath, string tPath, string manifest) {
-	
+
 	//creates a repo using a given manifest
 	this->sPath = sPath;
 	string rootName;
@@ -60,7 +60,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	// Create a manifest one folder above the target project tree root folder
 	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "check-out ARGS:\t");
-
+	this->manifest->write(sPath + getSlash(sPath) + manifest, "Parent: ");
 
 	// Open the manifest to parse
 	ifstream file(sPath + '/' + manifest);
@@ -70,7 +70,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	{
 		if (line[0] == 'L')
 			break;
-		
+
 		else if (line[26] == 'F')
 		{
 			// Extract the folder name from the manifest line
