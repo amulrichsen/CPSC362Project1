@@ -33,6 +33,7 @@ public:
 	void create(string sPath, string tPath); //creates a repo using a given source tree
 	void checkIn(string sPath, string tPath); //updates an existing project tree
 	void checkOut(string sPath, string tPath, string manifest); //creates a repo using a given manifest
+	void merge(string sPath, string tPath); //merges new changes from a repo into a project tree
 
 	
 };
