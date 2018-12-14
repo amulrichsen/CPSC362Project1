@@ -43,11 +43,30 @@ int main()
 	cout << "create\n";
 	cout << "check-in\n";
 	cout << "check-out\n";
+	cout << "merge\n";
 	cout << "label\n\n";
 	cout << "ENTER A COMMAND: " << endl;
 	cin >> comm;
 
-	if (comm == "create")
+	if (comm == "merge")
+	{
+		string parent = "";
+		string repo = "";
+
+		cout << "Enter the complete path of the parent project (T): ";
+		cin >> parent;
+		cout << "Enter the complete path of the repository: ";
+		cin >> repo;
+
+		Repo r3;
+		/* check the child into the project tree T before checking the documents
+		to see if they have they have small differences*/
+		r3.checkIn(repo, parent);
+
+		//merge after this
+	}
+
+	else if (comm == "create")
 	{
 		string sFolder = "";
 		string tFolder = "";
@@ -133,7 +152,7 @@ int main()
 		cin >> source;
 		cout << "Enter the complete path of the repository: ";
 		cin >> tar;
-		
+
 
 		Repo r2;
 		r2.checkIn(source, tar);
