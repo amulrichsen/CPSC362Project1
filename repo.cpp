@@ -138,11 +138,14 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	}
 }
 
+/*	PARAMS:
+		rManifest -> Full path to REPO's Manifest
+		tManifest -> Full path to target PROJECT TREE's Manifest
+	DESCRIPTION: Finds a common ancestor Manifest between two given manifests
+	RETURNS: Full Path to Ancestor Manifest
+*/
 string Repo::ancestor(string rManifest, string tManifest)
 {
-	cout << "R MANIFEST:" << rManifest << endl;
-	cout << "T MANIFEST: " << tManifest << endl;
-
 	ifstream rFile(rManifest);
 	ifstream tFile(tManifest);
 	string rLine, tLine;
@@ -156,8 +159,6 @@ string Repo::ancestor(string rManifest, string tManifest)
 	while (getline(tFile, tLine))
 		if (tLine[26] == 'P')
 			tParent = tLine.substr(57, tLine.length() - 1);
-
-	cout << "INITIAL PARENTS: " << endl << rParent << endl << tParent << endl;
 
 	/* Main Loop, continues if no common ancestor found */
 	while (rParent != tParent)
@@ -179,11 +180,9 @@ string Repo::ancestor(string rManifest, string tManifest)
 			rParent = rManifest;
 			if (tParentOld == tParent)
 			{
-				cout << "COULDNT FIND" << endl;
-				return "NONE";
+				return NULL;
 			}
 		}
-		cout << "CHECKING " + rParent + " AGAINST " + tParent << endl;
 	}
 
 	return rParent;
@@ -226,7 +225,6 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			// Extract the relative path + folder name from the manifest line
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + rPath.length());
-			cout << fName << endl;
 			// Check if the folder exists in the target's manifest
 			// If it does not exist, create it
 			if (!checkExists(fName, tManifest))
@@ -242,7 +240,6 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			// Extract the file name from the manifest line
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + rPath.length());
-			cout << fName << endl;
 
 			// Get the next line that contains the file's artifact
 			getline(file, line);
@@ -275,8 +272,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 
 					// Create G's version of the file
 					/* To do this we loop through GRANDMA's manifest until we find it's version of the file */
-					cout << "ANCESTOR FOUND: " << ancestor(rPath + '/' + rManifest, tManifest) << endl;
-					/*
+					string gManifest = ancestor(rPath + '/' + rManifest, tManifest);
 					ifstream gFile(gManifest);
 					string line2;
 					while (getline(gFile, line2))
@@ -291,7 +287,6 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 							copyFile(gPath, tPath + newName);
 							}
 					}
-					*/
 				}
 			}
 			else
@@ -320,14 +315,11 @@ bool checkExists(string path, string tManifest)
 	while (getline(tFile, line))
 	{
 		string pathTest = line.substr(line.length() - path.length(), line.length() - 1);
-		cout << "CHECKING :" << path << " VS " << pathTest << endl;
 		if (path == pathTest)
 		{
-			cout << "TRUE" << endl;
 			return true;
 		}
 	}
-	cout << "FALSE" << endl;
 	return false;
 
 }
