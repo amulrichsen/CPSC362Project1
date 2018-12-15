@@ -65,8 +65,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	if (manifest.find(".txt") == string::npos)
 		manifest = experimental::filesystem::path(searchLabels(sPath, manifest)).stem().string() + experimental::filesystem::path(searchLabels(sPath, manifest)).extension().string();
 	// Create a manifest one folder above the target project tree root folder
-	//ORIGINAL: this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
-	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() - 1))); //NEW
+	ORIGINAL: this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "check-out ARGS:\t");
 	this->manifest->write(sPath + getSlash(sPath) + manifest, "Parent: ");
 
