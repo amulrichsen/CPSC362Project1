@@ -45,8 +45,7 @@ string Repo::checkIn(string sPath, string tPath) {
 	//Create Manifest
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
-	Manifest checkOutManifest(experimental::filesystem::path(sPath).parent_path().string(), false);
-	checkOutManifest.write(this->manifest->getManifestPath(), "Parent: ");
+
 
 	string prevMani = experimental::filesystem::path(sPath).parent_path().string() + "/manifest.txt";
 	ifstream mani(prevMani);
@@ -57,6 +56,8 @@ string Repo::checkIn(string sPath, string tPath) {
 			parent = line.substr(57, line.length() - 1);
 	}
 	this->manifest->write(parent, "Parent: ");
+	Manifest checkOutManifest(experimental::filesystem::path(sPath).parent_path().string(), false);
+	checkOutManifest.write(this->manifest->getManifestPath(), "Parent: ");
 
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
 	checkInLog(sPath, this->manifest->getManifestPath());
@@ -146,24 +147,28 @@ string Repo::ancestor(string rManifest, string tManifest)
 	ifstream tFile(tManifest);
 	string rLine, tLine;
 	string rParent, tParent;
-	
-	while (getline(rFile, rLine))
-		if (rLine[26] == 'P')
-			rParent = rLine.substr(57, rLine.length() - 1);
+
+	/*	Set Initial Parents to R's Manifest and T's Parent Manifest 
+		We will be comparing T's Parent Manifest Against R's Manifest initially
+	*/
+	rParent = rManifest;
 
 	while (getline(tFile, tLine))
 		if (tLine[26] == 'P')
 			tParent = tLine.substr(57, tLine.length() - 1);
 
-	cout << "INITIAL PARENTS: " << endl;
+	cout << "INITIAL PARENTS: " << endl << rParent << endl << tParent << endl;
 
+	/* Main Loop, continues if no common ancestor found */
 	while (rParent != tParent)
 	{
 		ifstream rFile(rParent);
 		string rParentOld = rParent;
+		/* Find rParent's Parent */
 		while (getline(rFile, rLine))
 			if (rLine[26] == 'P')
 				rParent = rLine.substr(57, rLine.length() - 1);
+		/* If we are at the very FIRST Manifest, then start comparing against T's PARENT's Manifest */
 		if (rParentOld == rParent)
 		{
 			ifstream tFile(tParent);
@@ -171,10 +176,11 @@ string Repo::ancestor(string rManifest, string tManifest)
 			while(getline(tFile, tLine))
 				if(tLine[26] == 'P')
 					tParent = tLine.substr(57, tLine.length() - 1);
+			rParent = rManifest;
 			if (tParentOld == tParent)
 			{
 				cout << "COULDNT FIND" << endl;
-				break;
+				return "NONE";
 			}
 		}
 		cout << "CHECKING " + rParent + " AGAINST " + tParent << endl;
@@ -283,7 +289,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 							string gPath = line2.substr(57, line2.length() - 1);
 							newName = fName.substr(0, fName.length() - extension.length()) + "_MG" + extension;
 							copyFile(gPath, tPath + newName);
-						}
+							}
 					}
 					*/
 				}
