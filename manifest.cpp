@@ -1,12 +1,12 @@
 /*	Manifest Functions
-	Contains the functions for the Manifest Class
+Contains the functions for the Manifest Class
 
-	Authors:
-	Anette Ulrichsen
-	amulrichsen@csu.fullerton.edu
+Authors:
+Anette Ulrichsen
+amulrichsen@csu.fullerton.edu
 
-	John Margis
-	margisj@csu.fullerton.edu
+John Margis
+margisj@csu.fullerton.edu
 */
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
@@ -16,7 +16,7 @@
 #include "manifest.h"
 
 /*	Constructor
-	1. Creates an empty manifest file inside the root */
+1. Creates an empty manifest file inside the root */
 Manifest::Manifest(string path)
 {
 	int randVar;
@@ -31,7 +31,7 @@ Manifest::Manifest(string path)
 }
 
 /*	Params: Target Path (file that's being modified by command), Message
-	Appends the make file with the Time, Message, and Target File/Folder
+Appends the make file with the Time, Message, and Target File/Folder
 */
 void Manifest::write(string tPath, string msg)
 {
@@ -43,8 +43,8 @@ void Manifest::write(string tPath, string msg)
 }
 
 /*	Params: Buffer
-	Gets the current date/time and formats it
-	Returns: Formatted time buffer
+Gets the current date/time and formats it
+Returns: Formatted time buffer
 */
 char* Manifest::getDT(char *buff)
 {
@@ -54,7 +54,7 @@ char* Manifest::getDT(char *buff)
 }
 
 /*	Params: None
-	Sets the tStamp variable to the formatted Time
+Sets the tStamp variable to the formatted Time
 */
 void Manifest::getTime()
 {
@@ -62,7 +62,8 @@ void Manifest::getTime()
 	this->tStamp = getDT(buff);
 }
 
-string Manifest::getPath()
+
+string Manifest::getManifestPath()
 {
 	return this->path;
 }

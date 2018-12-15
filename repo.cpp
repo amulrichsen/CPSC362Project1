@@ -36,7 +36,7 @@ string Repo::checkIn(string sPath, string tPath) {
 	checkInLog(sPath, this->manifest->getManifestPath());
 
 	//Return the created manifest
-	return this->manifest->getPath();
+	return this->manifest->getManifestPath();
 
 }
 

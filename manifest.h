@@ -1,12 +1,12 @@
 /*	Manifest Class
-	Creates a manifest file that logs commands for the repo
+Creates a manifest file that logs commands for the repo
 
-	Authors:
-	Anette Ulrichsen
-	amulrichsen@csu.fullerton.edu
+Authors:
+Anette Ulrichsen
+amulrichsen@csu.fullerton.edu
 
-	John Margis
-	margisj@csu.fullerton.edu
+John Margis
+margisj@csu.fullerton.edu
 */
 #pragma once
 
@@ -25,8 +25,7 @@ private:
 public:
 	Manifest(string path);
 	void write(string tPath, string msg); //Writes to the manifest file
-	string Manifest::getPath(); //Returns path to manifest
-
+	string getManifestPath();
 };
 
 //Required Prototypes
