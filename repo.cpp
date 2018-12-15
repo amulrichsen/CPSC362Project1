@@ -23,6 +23,9 @@ void Repo::create(string sPath, string tPath) {
 	this->manifest->write(sPath + ",\t" + tPath, "create-repo ARGS:\t");
 	//Create initial leaf for root folder
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest);
+
+	string action = "create";
+	dotFile(this->tPath, this->manifest->getManifestPath(), this->sPath, action);
 }
 string Repo::checkIn(string sPath, string tPath) {
 	//updates an existing project tree
@@ -119,9 +122,9 @@ string Repo::ancestor(string fName, string checksum, string rPath, string mPath)
 	cout << "fname: " << fName << endl;
 	cout << "checksum: " << checksum << endl;
 	cout << "rpath: " << rPath << endl;
-	cout << "mpath: " << mPath << endl;
+	//cout << "mpath: " << mPath << endl;
 
-	//mPath = rPath + getSlash(rPath) + mPath;
+	mPath = rPath + getSlash(rPath) + mPath;
 	//open the log
 	ifstream file(rPath + getSlash(rPath) + "Log.txt");
 	string line;
@@ -196,7 +199,8 @@ string Repo::ancestor(string fName, string checksum, string rPath, string mPath)
 		if (foundCheck == false && foundName == true)
 		{
 			//found file with ancestor
-			cout << "Found the correct file\n";
+			cout << "Found the correct file: " << line << endl;
+
 
 			return line;
 
