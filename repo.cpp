@@ -113,8 +113,6 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 	//FIND COMMON ANCESTOR MANIFESTO
 
 	//OPEN AND PARSE R's MANIFESTO
-	/* To get the path of the repo we subtract the length of the manifest name (ALL Manifests are 17 chars in length) */
-
 
 	// Open the manifest to parse
 	ifstream file(rPath + '/' + rManifest);
@@ -179,19 +177,6 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			}
 
 		}
-
-		//FOR EVERY FOLDER CREATE, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
-			//IF THERE IS -> CONTINUE
-			//IF NOT -> CREATE
-		//For EVERY FILE FOLDER, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
-			//IF THERE IS -> CHECK THAT R's ARTIFACT MATCHES T's FILE CONTENTS
-				//IF THEY MATCH -> CONTINUE
-				//IF THEY DON'T
-					//CREATE R's VERSION AND NAME FILE_MR.TXT
-					//RENAME T's VERSION TO FILE_MT.TXT
-					//CHECK COMMON ANCESTOR MANIFESTO
-						//FIND, OPEN, AND COPY VERSION TO FILE_MG.TXT
-					
 	}
 }
 
