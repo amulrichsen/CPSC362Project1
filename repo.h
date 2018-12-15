@@ -1,13 +1,13 @@
 /*	Repo Class
-	Creates a repository using a given source tree path and target folder path
-	Replicates Files and Folders
+Creates a repository using a given source tree path and target folder path
+Replicates Files and Folders
 
-	Authors:
-	Anette Ulrichsen
-	amulrichsen@csu.fullerton.edu
+Authors:
+Anette Ulrichsen
+amulrichsen@csu.fullerton.edu
 
-	John Margis
-	margisj@csu.fullerton.edu
+John Margis
+margisj@csu.fullerton.edu
 */
 #pragma once
 #include <string>
@@ -34,8 +34,9 @@ public:
 	void checkIn(string sPath, string tPath); //updates an existing project tree
 	void checkOut(string sPath, string tPath, string manifest); //creates a repo using a given manifest
 	void merge(string sPath, string tPath); //merges new changes from a repo into a project tree
+	void checkInLog(string ptPath, string mPath); //creates a textfile logging the manifests created for each check in from a project tree
 
-	
+
 };
 
 //Required Prototypes
