@@ -23,9 +23,10 @@ private:
 	void getTime(); //Sets tStamp
 	static char *getDT(char *buff); //Gets and formats time, gives to getTime()
 public:
-	Manifest(string path);
+	Manifest(string path, bool checkSum=true);
 	void write(string tPath, string msg); //Writes to the manifest file
 	string getManifestPath(); //Returns the Manifest's path
+
 };
 
 //Required Prototypes

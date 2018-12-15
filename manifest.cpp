@@ -17,7 +17,7 @@ margisj@csu.fullerton.edu
 
 /*	Constructor
 1. Creates an empty manifest file inside the root */
-Manifest::Manifest(string path)
+Manifest::Manifest(string path, bool checkSum)
 {
 	int randVar;
 
@@ -25,7 +25,10 @@ Manifest::Manifest(string path)
 	randVar = rand() % 9000 + 1000;
 
 	//creates manifest inside of root repo folder
-	this->path = path + getSlash(path) + to_string(randVar) + "-manifest.txt";
+	if (checkSum)
+		this->path = path + getSlash(path) + to_string(randVar) + "-manifest.txt";
+	else
+		this->path = path + getSlash(path) + "manifest.txt";
 	copyFile(this->path, this->path);
 	this->write(this->path, "Manifest Created\t");
 }

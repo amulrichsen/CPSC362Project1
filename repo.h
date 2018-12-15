@@ -35,6 +35,8 @@ public:
 	void checkOut(string sPath, string tPath, string manifest); //creates a repo using a given manifest
 	void merge(string rPath, string tManifest, string rManifest, string tPath); //merges new changes from a repo into a project tree
 	void checkInLog(string ptPath, string mPath); //creates a textfile logging the manifests created for each check in from a project tree
+	string ancestor(string rManifest, string tManifest);
+
 
 
 };

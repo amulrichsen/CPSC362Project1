@@ -45,6 +45,19 @@ string Repo::checkIn(string sPath, string tPath) {
 	//Create Manifest
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
+	Manifest checkOutManifest(experimental::filesystem::path(sPath).parent_path().string(), false);
+	checkOutManifest.write(this->manifest->getManifestPath(), "Parent: ");
+
+	string prevMani = experimental::filesystem::path(sPath).parent_path().string() + "/manifest.txt";
+	ifstream mani(prevMani);
+	string line, parent;
+	while (getline(mani, line))
+	{
+		if (line[26] == 'P')
+			parent = line.substr(57, line.length() - 1);
+	}
+	this->manifest->write(parent, "Parent: ");
+
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
 	checkInLog(sPath, this->manifest->getManifestPath());
 
@@ -81,7 +94,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	if (manifest.find(".txt") == string::npos)
 		manifest = experimental::filesystem::path(searchLabels(sPath, manifest)).stem().string() + experimental::filesystem::path(searchLabels(sPath, manifest)).extension().string();
 	// Create a manifest one folder above the target project tree root folder
-	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
+	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)), false);
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "check-out ARGS:\t");
 	this->manifest->write(sPath + getSlash(sPath) + manifest, "Parent: ");
 
@@ -122,6 +135,52 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 
 
 	}
+}
+
+string Repo::ancestor(string rManifest, string tManifest)
+{
+	cout << "R MANIFEST:" << rManifest << endl;
+	cout << "T MANIFEST: " << tManifest << endl;
+
+	ifstream rFile(rManifest);
+	ifstream tFile(tManifest);
+	string rLine, tLine;
+	string rParent, tParent;
+	
+	while (getline(rFile, rLine))
+		if (rLine[26] == 'P')
+			rParent = rLine.substr(57, rLine.length() - 1);
+
+	while (getline(tFile, tLine))
+		if (tLine[26] == 'P')
+			tParent = tLine.substr(57, tLine.length() - 1);
+
+	cout << "INITIAL PARENTS: " << endl;
+
+	while (rParent != tParent)
+	{
+		ifstream rFile(rParent);
+		string rParentOld = rParent;
+		while (getline(rFile, rLine))
+			if (rLine[26] == 'P')
+				rParent = rLine.substr(57, rLine.length() - 1);
+		if (rParentOld == rParent)
+		{
+			ifstream tFile(tParent);
+			string tParentOld = tParent;
+			while(getline(tFile, tLine))
+				if(tLine[26] == 'P')
+					tParent = tLine.substr(57, tLine.length() - 1);
+			if (tParentOld == tParent)
+			{
+				cout << "COULDNT FIND" << endl;
+				break;
+			}
+		}
+		cout << "CHECKING " + rParent + " AGAINST " + tParent << endl;
+	}
+
+	return rParent;
 }
 
 /*	PARAMS:
@@ -210,6 +269,8 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 
 					// Create G's version of the file
 					/* To do this we loop through GRANDMA's manifest until we find it's version of the file */
+					cout << "ANCESTOR FOUND: " << ancestor(rPath + '/' + rManifest, tManifest) << endl;
+					/*
 					ifstream gFile(gManifest);
 					string line2;
 					while (getline(gFile, line2))
@@ -224,6 +285,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 							copyFile(gPath, tPath + newName);
 						}
 					}
+					*/
 				}
 			}
 			else
