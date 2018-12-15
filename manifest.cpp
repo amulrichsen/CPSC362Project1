@@ -22,7 +22,7 @@ Manifest::Manifest(string path)
 	int randVar;
 
 	srand(time(NULL));
-	randVar = rand() % 10000 + 1;
+	randVar = rand() % 9000 + 1000;
 
 	//creates manifest inside of root repo folder
 	this->path = path + getSlash(path) + to_string(randVar) + "-manifest.txt";
