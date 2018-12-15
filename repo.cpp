@@ -33,7 +33,7 @@ void Repo::checkIn(string sPath, string tPath) {
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
-
+	checkInLog(sPath, this->manifest->getManifestPath());
 }
 
 // Creates a copy of a repo using it's manifest
@@ -108,19 +108,56 @@ void Repo::merge(string sPath, string tPath)
 	//FIND COMMON ANCESTOR MANIFESTO
 
 	//OPEN AND PARSE R's MANIFESTO
-		//FOR EVERY FOLDER CREATE, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
-			//IF THERE IS -> CONTINUE
-			//IF NOT -> CREATE
-		//For EVERY FILE FOLDER, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
-			//IF THERE IS -> CHECK THAT R's ARTIFACT MATCHES T's FILE CONTENTS
-				//IF THEY MATCH -> CONTINUE
-				//IF THEY DON'T
-					//CREATE R's VERSION AND NAME FILE_MR.TXT
-					//RENAME T's VERSION TO FILE_MT.TXT
-					//CHECK COMMON ANCESTOR MANIFESTO
-						//FIND, OPEN, AND COPY VERSION TO FILE_MG.TXT
-		
+	//FOR EVERY FOLDER CREATE, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
+	//IF THERE IS -> CONTINUE
+	//IF NOT -> CREATE
+	//For EVERY FILE FOLDER, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
+	//IF THERE IS -> CHECK THAT R's ARTIFACT MATCHES T's FILE CONTENTS
+	//IF THEY MATCH -> CONTINUE
+	//IF THEY DON'T
+	//CREATE R's VERSION AND NAME FILE_MR.TXT
+	//RENAME T's VERSION TO FILE_MT.TXT
+	//CHECK COMMON ANCESTOR MANIFESTO
+	//FIND, OPEN, AND COPY VERSION TO FILE_MG.TXT
+
 }
 
+/*create a text file named after the project tree that logs the
+file path of the manifest created inside the repo for each check in -- ordered
+oldest to newest*/
+void Repo::checkInLog(string ptPath, string mPath)
+{
+	char s = getSlash(ptPath);
+	string name = "";
+	for (int i = 0; i < ptPath.size(); i++)
+	{
+		name += ptPath[i];
+
+		if (ptPath[i] == s)
+		{
+			name = "";
+		}
+	}
+
+	string curr = "";
+	string previousPath = "";
+	for (int i = 0; i < ptPath.size(); i++)
+	{
+		curr += ptPath[i];
+		if (ptPath[i] == s)
+		{
+			previousPath += curr;
+			curr = "";
+		}
+		
+	}
+
+	string manifestLog = previousPath + name + "-manifestLog.txt";
+
+	ofstream dst;
+	dst.open(manifestLog, ofstream::app);
+	dst << mPath << "\n";
+	dst.close();
+}
 
 
