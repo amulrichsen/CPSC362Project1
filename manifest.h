@@ -25,7 +25,7 @@ private:
 public:
 	Manifest(string path);
 	void write(string tPath, string msg); //Writes to the manifest file
-	string getManifestPath();
+	string getManifestPath(); //Returns the Manifest's path
 };
 
 //Required Prototypes
