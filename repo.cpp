@@ -40,6 +40,7 @@ string Repo::checkIn(string sPath, string tPath) {
 
 	string action = "check-in";
 	dotFile(this->tPath, this->manifest->getManifestPath(), this->sPath, action);
+	checkInLog(sPath, this->manifest->getManifestPath());
 
 	//Return the created manifest
 	return this->manifest->getManifestPath();
@@ -113,18 +114,151 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 
 	string action = "check-out";
 	dotFile(this->sPath, this->manifest->getManifestPath(), this->tPath, action);
+	checkInLog(tPath, this->manifest->getManifestPath());
 }
 
-/*fname= file name    checksum = artifact id       rpath = repo path      mpath = manifest path selected by user*/
-string Repo::ancestor(string fName, string checksum, string rPath, string mPath)
+/*fname= file name    checksum = artifact id       rpath = repo path      mpath = manifest path selected by user     tpath= manifest of most recent check in*/
+string Repo::ancestor(string fName, string checksum, string rPath, string mPath, string tPath)
 {
 	cout << "Paramters: \n";
-	cout << "fname: " << fName << endl;
-	cout << "checksum: " << checksum << endl;
-	cout << "rpath: " << rPath << endl;
-	//cout << "mpath: " << mPath << endl;
+	cout << "File Name for Comparison: " << fName << endl;
+	cout << "Checksum from user selected manifest: " << checksum << endl;
+	cout << "Repo Path: " << rPath << endl;
+	cout << "Recent check in manifest path: " << tPath << endl;
 
 	mPath = rPath + getSlash(rPath) + mPath;
+
+	cout << "User selected manifest path: " << mPath << endl;
+	string originalParent = "";
+	string mergeParent = "";
+
+	ifstream file1;
+	string line1;
+	file1.open(mPath); //open the smanifest file
+
+	for (int i = 0; i < 2; i++)
+	{
+		//get path to parent file of selected manifest
+		while (getline(file1, line1))
+		{
+			if (line1.find("ARGS:") != string::npos)
+			{
+				break; //line1 holds the line with the path to the checklog
+			}
+		}
+
+		file1.close(); //close smani
+		int index = line1.find("\t"); //find the start of the file path
+		line1.erase(0, index); //should just be the arguments in the line now
+		index = line1.find(","); //find the start of the second argument
+		line1.erase(index, line1.size() - index); //should erase everything but the parent path
+
+		if (originalParent == "")
+			originalParent = line1;
+		else
+			mergeParent = line1;
+
+		file1.open(tPath);
+	}
+
+	/*merge parent now holds the path of the project tree that will be merged into
+	  original parent now holds the path of the project tree that created the selected manifest*/
+
+	//get both one step up to find checkinfile
+	originalParent = experimental::filesystem::path(originalParent).parent_path().string();
+	mergeParent = experimental::filesystem::path(mergeParent).parent_path().string();
+
+	//open the check in files
+	ifstream file2, file3, file4;
+	string line2, line3, line4;
+	string mpPath, rpPath;
+	mpPath = mergeParent + experimental::filesystem::path(mergeParent).stem().string() + "-manifestLog.txt";
+	rpPath = originalParent + experimental::filesystem::path(originalParent).stem().string() + "-manifestLog.txt";
+	file2.open(rpPath);
+	file3.open(mpPath);
+
+	bool found = false;
+
+	//find line in checkin log where the selected repo is
+	int count = 0;
+	while (getline(file2, line2))
+	{
+		if (line2.find(mPath) != string::npos)
+		{
+			break; //found so break
+		}
+		++count;
+	}
+	file2.close();
+
+
+	//check if file name and artifact(from selected manifest) match inside each manifest file in the merge parent's checkin log
+	for (int f = 0; f < count; f++)
+	{
+		while ((getline(file3, line3)) && !found) //get each manifest from merge Parent
+		{
+			found = checkExists(checksum, line3); //if found is true, then this file has they same filename and checksum, return this file line as a common ancestor
+			return line3;//common ancestor of file found
+		}
+
+		//close then open to start reparsing at the top of the file
+		file3.close();
+		file3.open(mpPath);
+		file2.open(rpPath);
+
+		bool here = false;
+
+		while (count >= 0 && !here)
+		{
+			//find previous manifest and grab checksum
+			for (int i = 0; i < count; i++)
+			{
+				getline(file2, line2);
+			}
+			file2.close();
+			//open previous manifest
+			file4.open(line2);
+
+
+			//see if name is in it
+			while (getline(file4, line4))
+			{
+				if (line4.find(fName) != string::npos)
+				{
+					here = true; //allows us to check all merge manifests to see if they have a match
+					getline(file4, line4); //getline for next artifact
+					checksum = line4.substr(57, line4.length() - 1);
+					checksum.erase(checksum.begin(), checksum.begin() + rPath.length()); //store artifact
+				}
+			}
+			//if not found, decrement count and go through portion again
+
+			if (!here)
+				--count;
+			if (!here && count < 0)
+			{
+				cout << "error, file not found in previous manifests";
+				return "";
+			}
+
+		}
+	}
+
+
+	
+
+
+	/*
+	cout << "Paramters: \n";
+	cout << "fname: " << fName << endl;
+	cout << "selected checksum: " << checksum << endl;
+	//cout << "generated manifest checksum" << << endl;
+	cout << "rpath: " << rPath << endl;
+
+	mPath = rPath + getSlash(rPath) + mPath;
+
+	cout << "selected mpath: " << mPath << endl;
+
 	//open the log
 	ifstream file(rPath + getSlash(rPath) + "Log.txt");
 	string line;
@@ -213,6 +347,9 @@ string Repo::ancestor(string fName, string checksum, string rPath, string mPath)
 
 		index--;
 	}
+	*/
+	
+	//return "";//placeholder
 
 }
 
@@ -280,7 +417,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
 
 					// TODO: CREATE GRANDMOTHER VERSION OF FILE
-					string gManifest = ancestor(fName, aName, rPath, rManifest);
+					string gManifest = ancestor(fName, aName, rPath, rManifest, tManifest);
 					ifstream gFile(gManifest);
 					string line2;
 					while (getline(gFile, line2))
@@ -290,7 +427,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 						{
 							// Get the next line (next line is always artifact)
 							getline(gFile, line2);
-							string gPath = line2.erase(0, 57); //1 not 58
+							string gPath = line2.erase(); //1 not 58
 							newName = fName.substr(0, fName.length() - extension.length()) + "_MG" + extension;
 							copyFile(gPath, tPath + newName);
 							break;
