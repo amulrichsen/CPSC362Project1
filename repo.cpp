@@ -13,7 +13,12 @@ margisj@csu.fullerton.edu
 #include "repo.h"
 using namespace std;
 
-// Creates a repo using a source tree
+/*	PARAMS:
+		sPath -> Path to the source tree
+		tPath -> Path to the location for the repo
+	DESCRIPTION: Function creates a repo from the given source tree
+	RETURNS: None
+*/
 void Repo::create(string sPath, string tPath) {
 	this->sPath = sPath;
 	//Append root folder name to the target path
@@ -24,6 +29,14 @@ void Repo::create(string sPath, string tPath) {
 	//Create initial leaf for root folder
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest);
 }
+
+/*	PARAMS:
+		sPath -> Path to project tree ROOT folder
+			NOTE: ROOT folder must have same name as the original source tree
+		tPath -> Path to REPO
+	DESCRIPTION: This function checks in changes to a given repo from a project tree.
+	RETURNS: String path to created manifest.
+*/
 string Repo::checkIn(string sPath, string tPath) {
 	//updates an existing project tree
 	this->sPath = sPath;
@@ -40,7 +53,13 @@ string Repo::checkIn(string sPath, string tPath) {
 
 }
 
-// Creates a copy of a repo using it's manifest
+/*	PARAMS: 
+		sPath -> Path to REPO
+		tPath -> Path to future project tree ROOT folder
+			NOTE: ROOT folder must have same name as the original source tree
+	DESCRIPTION: This function creates a project tree from a given repo.
+	RETURNS: NONE
+*/
 void Repo::checkOut(string sPath, string tPath, string manifest) {
 
 	//creates a repo using a given manifest
@@ -105,7 +124,15 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	}
 }
 
-//SPATH = sPath = R's manifesto, tPath = Target Project Tree's root folder
+/*	PARAMS:
+		rPath -> Path to REPO
+		tManifest -> Path to Project Tree's current manifest 
+		rManifest -> Name or Label of desired REPO's manifest 
+		tPath -> Path to target project tree ROOT folder
+			NOTE: ROOT folder must have same name as the original source tree
+	DESCRIPTION: This function updates a previously checked-out project tree using a given REPO.
+	RETURNS: None
+*/
 void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 {
 	//Set Target Project Folder path to root (One folder up)
@@ -211,7 +238,12 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 	}
 }
 
-/* Checks for the given (path) string within the given tManifest file */
+/*	PARAMS: 
+		path -> String to look for.
+		tManifest -> Path of file to look inside.
+	DESCRIPTION: Checks a manifest for a string.
+	RETURNS: TRUE if found, FALSE if not found.
+*/
 bool checkExists(string path, string tManifest)
 {
 	ifstream tFile(tManifest);
@@ -232,9 +264,14 @@ bool checkExists(string path, string tManifest)
 
 }
 
-/*create a text file named after the project tree that logs the
-file path of the manifest created inside the repo for each check in -- ordered
-oldest to newest*/
+/*	PARAMS:
+		ptPath -> Path to Project Tree
+		mPath -> Path to Manifest
+	DESCRIPTION: creates a text file named after the project tree that logs the
+	file path of the manifest created inside the repo for each check in -- ordered
+	oldest to newest
+	RETURNS: NONE
+*/
 void Repo::checkInLog(string ptPath, string mPath)
 {
 	char s = getSlash(ptPath);
