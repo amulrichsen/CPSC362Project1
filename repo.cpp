@@ -33,6 +33,7 @@ string Repo::checkIn(string sPath, string tPath) {
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
+	checkInLog(sPath, this->manifest->getManifestPath());
 
 	//Return the created manifest
 	return this->manifest->getPath();
@@ -212,6 +213,45 @@ bool checkExists(string path, string tManifest)
 	}
 	cout << "FALSE" << endl;
 	return false;
+
+}
+
+/*create a text file named after the project tree that logs the
+file path of the manifest created inside the repo for each check in -- ordered
+oldest to newest*/
+void Repo::checkInLog(string ptPath, string mPath)
+{
+	char s = getSlash(ptPath);
+	string name = "";
+	for (int i = 0; i < ptPath.size(); i++)
+	{
+		name += ptPath[i];
+
+		if (ptPath[i] == s)
+		{
+			name = "";
+		}
+	}
+
+	string curr = "";
+	string previousPath = "";
+	for (int i = 0; i < ptPath.size(); i++)
+	{
+		curr += ptPath[i];
+		if (ptPath[i] == s)
+		{
+			previousPath += curr;
+			curr = "";
+		}
+		
+	}
+
+	string manifestLog = previousPath + name + "-manifestLog.txt";
+
+	ofstream dst;
+	dst.open(manifestLog, ofstream::app);
+	dst << mPath << "\n";
+	dst.close();
 }
 
 
