@@ -99,7 +99,6 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 			copyFile(aPath, this->tPath + '/' + fName);
 			this->manifest->write(experimental::filesystem::path(this->tPath + fName).string(), "checkout: File\t");
 
-
 		}
 
 
@@ -119,7 +118,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 		+ experimental::filesystem::path(searchLabels(rPath, rManifest)).extension().string();
 
 	//FIND COMMON ANCESTOR MANIFESTO
-
+	string gManifest;
 	//OPEN AND PARSE R's MANIFESTO
 	ifstream file(rPath + '/' + rManifest);
 	string line;
@@ -158,16 +157,20 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			string aPath = line.substr(57, line.length() - 1);
 			string aName = aPath;
 			aName.erase(aName.begin(), aName.begin() + rPath.length());
+			/* Check if the file exists within the TARGET project tree */
 			if (checkExists(fName, tManifest))
 			{
+				/*  Check if the TARGET project tree's file is the same as the REPO's file 
+					If not, create CONFLICT versions of the file		*/
 				if (!checkExists(aName, tManifest))
 				{
+					/*	Extract the extension from the file and insert _MR, _MT, or _MG before it */
 					string extension = experimental::filesystem::path(tPath + fName).extension().string();
 					string newName = fName.substr(0, fName.length() - extension.length()) + "_MR" + extension;
+
 					// Create R's version of the file
 					cout << "CREATED: " + tPath + newName << endl;
 					copyFile(aPath, tPath + newName);
-
 					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
 
 
@@ -175,11 +178,25 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 					newName = fName.substr(0, fName.length() - extension.length()) + "_MT" + extension;
 					cout << "RENAMED: " + tPath + newName << endl;
 					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
-
 					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
 
 
-					// TODO: CREATE GRANDMOTHER VERSION OF FILE
+					// Create G's version of the file
+					/* To do this we loop through GRANDMA's manifest until we find it's version of the file */
+					ifstream gFile(gManifest);
+					string line2;
+					while (getline(gFile, line2))
+					{
+						string pathTest = line2.substr(line2.length() - fName.length(), line2.length() - 1);
+						if (fName == pathTest)
+						{
+							// Get the next line (next line is always artifact)
+							getline(gFile, line2);
+							string gPath = line2.substr(57, line2.length() - 1);
+							newName = fName.substr(0, fName.length() - extension.length()) + "_MG" + extension;
+							copyFile(gPath, tPath + newName);
+						}
+					}
 				}
 			}
 			else
@@ -194,7 +211,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 	}
 }
 
-// Pass the path you want to check
+/* Checks for the given (path) string within the given tManifest file */
 bool checkExists(string path, string tManifest)
 {
 	ifstream tFile(tManifest);
