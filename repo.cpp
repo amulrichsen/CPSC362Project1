@@ -272,7 +272,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 
 					// Create G's version of the file
 					/* To do this we loop through GRANDMA's manifest until we find it's version of the file */
-					string gManifest = ancestor(rPath + '/' + rManifest, tManifest);
+					gManifest = ancestor(rPath + '/' + rManifest, tManifest);
 					ifstream gFile(gManifest);
 					string line2;
 					while (getline(gFile, line2))
