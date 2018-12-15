@@ -36,6 +36,7 @@ public:
 	void merge(string rPath, string tManifest, string rManifest, string tPath); //merges new changes from a repo into a project tree
 	void checkInLog(string ptPath, string mPath); //creates a textfile logging the manifests created for each check in from a project tree
 	void dotFile(string rPath, string mPath, string pPath, string act);
+	string ancestor(string fName, string checksum, string repoPath, string mPath);
 
 
 };
