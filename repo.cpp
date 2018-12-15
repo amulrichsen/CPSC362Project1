@@ -24,7 +24,7 @@ void Repo::create(string sPath, string tPath) {
 	//Create initial leaf for root folder
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest);
 }
-void Repo::checkIn(string sPath, string tPath) {
+string Repo::checkIn(string sPath, string tPath) {
 	//updates an existing project tree
 	this->sPath = sPath;
 	//Append root folder name to the target path
@@ -33,6 +33,9 @@ void Repo::checkIn(string sPath, string tPath) {
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
+
+	//Return the created manifest
+	return this->manifest->getPath();
 
 }
 
@@ -103,11 +106,79 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 }
 
 //SPATH = sPath = R's manifesto, tPath = Target Project Tree's root folder
-void Repo::merge(string sPath, string tPath)
+void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 {
+	tPath = experimental::filesystem::path(tPath).parent_path().string();
 	//FIND COMMON ANCESTOR MANIFESTO
 
 	//OPEN AND PARSE R's MANIFESTO
+	/* To get the path of the repo we subtract the length of the manifest name (ALL Manifests are 17 chars in length) */
+
+
+	// Open the manifest to parse
+	ifstream file(rPath + '/' + rManifest);
+	string line;
+	//Parse line by line
+	while (getline(file, line))
+	{
+		if (line[0] == 'L')
+			break;
+
+		else if (line[26] == 'F')
+		{
+			
+			// Extract the relative path + folder name from the manifest line
+			string fName = line.substr(57, line.length() - 1);
+			fName.erase(fName.begin(), fName.begin() + rPath.length());
+			cout << fName << endl;
+			// Check if the folder exists in the target's manifest
+			// If it does not exist, create it
+			if (!checkExists(fName, tManifest))
+			{
+				experimental::filesystem::create_directory(tPath + fName);
+			}
+			//this->manifest->write(experimental::filesystem::path(this->tPath + fName).string(), "checkout: Folder\t");
+
+
+		}
+		else if (line[26] == 'C')
+		{
+			// Extract the file name from the manifest line
+			string fName = line.substr(57, line.length() - 1);
+			fName.erase(fName.begin(), fName.begin() + rPath.length());
+			cout << fName << endl;
+
+			// Get the next line that contains the file's artifact
+			getline(file, line);
+			string aPath = line.substr(57, line.length() - 1);
+			string aName = aPath;
+			aName.erase(aName.begin(), aName.begin() + rPath.length());
+			if (checkExists(fName, tManifest))
+			{
+				if (!checkExists(aName, tManifest))
+				{
+					string extension = experimental::filesystem::path(tPath + fName).extension().string();
+					string newName = fName.substr(0, fName.length() - extension.length()) + "_MR" + extension;
+					// Create R's version of the file
+					cout << "CREATED: " + tPath + newName << endl;
+					copyFile(aPath, tPath + newName);
+
+					// Rename T's version of the file
+					newName = fName.substr(0, fName.length() - extension.length()) + "_MT" + extension;
+					cout << "RENAMED: " + tPath + newName << endl;
+					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
+
+					// TODO: CREATE GRANDMOTHER VERSION OF FILE
+				}
+			}
+			else
+			{
+				// Copy the artifact and rename it to its original name
+				copyFile(aPath, tPath + fName);
+			}
+
+		}
+
 		//FOR EVERY FOLDER CREATE, CHECK THERE IS MATCHING FOLDER IN T's MANIFESTO
 			//IF THERE IS -> CONTINUE
 			//IF NOT -> CREATE
@@ -119,8 +190,28 @@ void Repo::merge(string sPath, string tPath)
 					//RENAME T's VERSION TO FILE_MT.TXT
 					//CHECK COMMON ANCESTOR MANIFESTO
 						//FIND, OPEN, AND COPY VERSION TO FILE_MG.TXT
-		
+					
+	}
 }
 
+// Pass the path you want to check
+bool checkExists(string path, string tManifest)
+{
+	ifstream tFile(tManifest);
+	string line;
+
+	while (getline(tFile, line))
+	{
+		string pathTest = line.substr(line.length() - path.length(), line.length() - 1);
+		cout << "CHECKING :" << path << " VS " << pathTest << endl;
+		if (path == pathTest)
+		{
+			cout << "TRUE" << endl;
+			return true;
+		}
+	}
+	cout << "FALSE" << endl;
+	return false;
+}
 
 

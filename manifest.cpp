@@ -61,3 +61,8 @@ void Manifest::getTime()
 	char buff[32];
 	this->tStamp = getDT(buff);
 }
+
+string Manifest::getPath()
+{
+	return this->path;
+}

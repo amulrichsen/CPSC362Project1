@@ -25,6 +25,8 @@ private:
 public:
 	Manifest(string path);
 	void write(string tPath, string msg); //Writes to the manifest file
+	string Manifest::getPath(); //Returns path to manifest
+
 };
 
 //Required Prototypes

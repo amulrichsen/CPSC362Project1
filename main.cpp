@@ -52,18 +52,23 @@ int main()
 	{
 		string parent = "";
 		string repo = "";
+		string manifest;
 
 		cout << "Enter the complete path of the parent project (T): ";
 		cin >> parent;
 		cout << "Enter the complete path of the repository: ";
 		cin >> repo;
+		cout << "Enter the filename or label of the manifest: ";
+		cin >> manifest;
 
 		Repo r3;
 		/* check the child into the project tree T before checking the documents
 		to see if they have they have small differences*/
-		r3.checkIn(repo, parent);
+		string parentMan = r3.checkIn(parent, repo);
 
 		//merge after this
+		r3.merge(repo, parentMan, manifest, parent);
+
 	}
 
 	else if (comm == "create")
