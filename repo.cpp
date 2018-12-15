@@ -33,7 +33,7 @@ string Repo::checkIn(string sPath, string tPath) {
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
-	//checkInLog(sPath, this->manifest->getManifestPath());
+																	 //checkInLog(sPath, this->manifest->getManifestPath());
 
 	string action = "check-in";
 	dotFile(this->tPath, this->manifest->getManifestPath(), this->sPath, action);
@@ -65,7 +65,7 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	if (manifest.find(".txt") == string::npos)
 		manifest = experimental::filesystem::path(searchLabels(sPath, manifest)).stem().string() + experimental::filesystem::path(searchLabels(sPath, manifest)).extension().string();
 	// Create a manifest one folder above the target project tree root folder
-	ORIGINAL: this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
+	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "check-out ARGS:\t");
 	this->manifest->write(sPath + getSlash(sPath) + manifest, "Parent: ");
 
@@ -112,6 +112,107 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	dotFile(this->sPath, this->manifest->getManifestPath(), this->tPath, action);
 }
 
+/*fname= file name    checksum = artifact id       rpath = repo path      mpath = manifest path selected by user*/
+string Repo::ancestor(string fName, string checksum, string rPath, string mPath)
+{
+	cout << "Paramters: \n";
+	cout << "fname: " << fName << endl;
+	cout << "checksum: " << checksum << endl;
+	cout << "rpath: " << rPath << endl;
+	cout << "mpath: " << mPath << endl;
+
+	//mPath = rPath + getSlash(rPath) + mPath;
+	//open the log
+	ifstream file(rPath + getSlash(rPath) + "Log.txt");
+	string line;
+	bool foundName = false;
+	bool foundCheck = false;
+	int foundOn = 0;
+
+
+	int index = 0;
+	int count = 0;
+
+	while (getline(file, line))
+	{
+		if (line.find(mPath) != string::npos)
+		{
+			index = count;
+			break;
+		}
+		++count;
+	}
+
+	file.close();
+	file.open(rPath + getSlash(rPath) + "Log.txt");
+
+	cout << "Found manifest path on line " << index << endl;
+
+	cout << "Enter while loop\n";
+	while (index > 0)
+	{
+		//loop to manifest before the manifest being searched
+		for (int j = 0; j < index; j++)
+		{
+			getline(file, line);
+		}
+
+		size_t found = line.find("Manifest: ");
+		if (found != string::npos) cout << "Found manifest path\n";
+		line.erase(0, found + 10); //erase first portion
+		cout << "Line: " << line << endl;
+		found = line.find("\t");
+		if (found != string::npos) cout << "Found tree path\n";
+		int eol = line.size() - found;
+		line.erase(found, eol);
+		cout << "Manifest Path: " << line << endl;
+
+		ifstream mani(line);
+		string gline;
+
+		int counter = 0;
+		while (getline(mani, gline))
+		{
+			if ((gline.find(fName) != string::npos))
+			{
+				cout << "Found manifest with matching file name\n";
+				foundName = true;
+				foundOn = counter + 1;
+
+			}
+
+			if (gline.find(checksum) != string::npos)
+			{
+				cout << "Checksum found, wrong manifest, break while loop\n";
+				foundCheck = true;
+				break;
+
+			}
+
+			++counter;
+		}
+
+
+		if (foundCheck == false && foundName == true)
+		{
+			//found file with ancestor
+			cout << "Found the correct file\n";
+
+			return line;
+
+		}
+		else
+		{
+			cout << "error, never found ancestor\n";
+			return "";
+		}
+
+		index--;
+	}
+
+}
+
+
 //SPATH = sPath = R's manifesto, tPath = Target Project Tree's root folder
 void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 {
@@ -152,6 +253,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + rPath.length());
 			cout << fName << endl;
+			
 
 			// Get the next line that contains the file's artifact
 			getline(file, line);
@@ -174,6 +276,21 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
 
 					// TODO: CREATE GRANDMOTHER VERSION OF FILE
+					string gManifest = ancestor(fName, aName, rPath, rManifest);
+					ifstream gFile(gManifest);
+					string line2;
+					while (getline(gFile, line2))
+					{
+						string pathTest = line2.substr(line2.length() - fName.length(), line2.length() - 1);
+						if (fName == pathTest)
+						{
+							// Get the next line (next line is always artifact)
+							getline(gFile, line2);
+							string gPath = line2.substr(57, line2.length() - 1);
+							newName = fName.substr(0, fName.length() - extension.length()) + "_MG" + extension;
+							copyFile(gPath, tPath + newName);
+						}
+					}
 				}
 			}
 			else
