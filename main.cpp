@@ -30,8 +30,7 @@ void insertLabel(string mPath, string label);
 string searchLabels(string sPath, string oldLabel);
 
 /*	Main Function
-Asks the user for the project tree folder and target folder
-Then creates the repo
+	DESCRIPTION: Asks the user which command they want to run.
 */
 int main()
 {
@@ -109,10 +108,8 @@ int main()
 
 			//append the manifest name to the file path
 			fPath += getSlash(fPath) + maniName;
-			cout << "DEBUG: new file path is = " << fPath << endl;
 
 			insertLabel(fPath, newLabel);
-			cout << "DEBUG: added label\n";
 
 		}
 
@@ -169,6 +166,12 @@ int main()
 	return 0;
 };
 
+/*	PARAMS:
+		sPath -> Path to Repo folder of Manifests to search
+		oldLabel -> Name of Label to search for
+	DESCRIPTION: Searches through manifests to find matching label
+	RETURNS: Name of found Manifest
+*/
 string searchLabels(string sPath, string oldLabel)
 {
 	vector<string> existingFiles;
@@ -180,14 +183,12 @@ string searchLabels(string sPath, string oldLabel)
 
 	for (auto& p : experimental::filesystem::directory_iterator(sPath))
 	{
-		//cout << "DEBUG: " << p << endl;
 		temp = p.path().string();
 		existingFiles.push_back(temp);
 	}
 
 	for (int i = 0; i < existingFiles.size() && !found; i++)
 	{
-		//cout << existingFiles[i] << endl;
 		if (existingFiles[i].find("manifest.txt"))
 		{
 			myfile.open(existingFiles[i]);
@@ -214,7 +215,12 @@ string searchLabels(string sPath, string oldLabel)
 	return foundMani;
 }
 
-//inserts a label into a manifest given the manifest path (including .txt)
+/*	PARAMS:
+		mPAth -> Path to Manifest
+		label -> Label to add
+	DESCRIPTION: Adds a label to a given manifest.
+	RETURNS: NONE
+*/
 void insertLabel(string mPath, string label)
 {
 	ofstream myfile;
@@ -235,7 +241,10 @@ void copyFile(string sourceName, string destName)
 	dst << src.rdbuf();
 }
 
-/*	Function to check if we're using a Windows absolute path by checking if we use / or \
+/*	PARAMS:
+		path -> A path to check
+	DESCRIPTION: Function to check if we're using a Windows absolute path by checking if we use / or \
+	RETURNS: A forward slash or Double backslash depending on path type.
 */
 char getSlash(string path)
 {

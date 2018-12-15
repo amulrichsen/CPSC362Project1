@@ -65,7 +65,10 @@ void Manifest::getTime()
 	this->tStamp = getDT(buff);
 }
 
-
+/*	PARAMS: NONE
+	DESCRIPTION: Returns Manifest's Path
+	RETURNS: String containing Manifest's Path
+*/
 string Manifest::getManifestPath()
 {
 	return this->path;
