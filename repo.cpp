@@ -258,14 +258,12 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 					string newName = fName.substr(0, fName.length() - extension.length()) + "_MR" + extension;
 
 					// Create R's version of the file
-					cout << "CREATED: " + tPath + newName << endl;
 					copyFile(aPath, tPath + newName);
 					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
 
 
 					// Rename T's version of the file
 					newName = fName.substr(0, fName.length() - extension.length()) + "_MT" + extension;
-					cout << "RENAMED: " + tPath + newName << endl;
 					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
 					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
 
