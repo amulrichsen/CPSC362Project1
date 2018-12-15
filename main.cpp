@@ -38,132 +38,141 @@ int main()
 	string comm;
 	string label;
 	string lpath;
+	bool q = false;
 
-	cout << "COMMANDS: \n";
-	cout << "create\n";
-	cout << "check-in\n";
-	cout << "check-out\n";
-	cout << "merge\n";
-	cout << "label\n\n";
-	cout << "ENTER A COMMAND: " << endl;
-	cin >> comm;
-
-	if (comm == "merge")
+	while (!q)
 	{
-		string parent = "";
-		string repo = "";
-		string manifest;
+		cout << "COMMANDS: \n";
+		cout << "create\n";
+		cout << "check-in\n";
+		cout << "check-out\n";
+		cout << "merge\n";
+		cout << "label\n";
+		cout << "quit\n\n";
+		cout << "ENTER A COMMAND: " << endl;
+		cin >> comm;
 
-		cout << "Enter the complete path of the parent project (T): ";
-		cin >> parent;
-		cout << "Enter the complete path of the repository: ";
-		cin >> repo;
-		cout << "Enter the filename or label of the manifest: ";
-		cin >> manifest;
-
-		Repo r3;
-		/* check the child into the project tree T before checking the documents
-		to see if they have they have small differences*/
-		string parentMan = r3.checkIn(parent, repo);
-
-		//merge after this
-		r3.merge(repo, parentMan, manifest, parent);
-
-	}
-
-	else if (comm == "create")
-	{
-		string sFolder = "";
-		string tFolder = "";
-
-		cout << "Enter the complete path of the source folder: ";
-		cin >> sFolder;
-		cout << "Enter the complete path of the target folder: ";
-		cin >> tFolder;
-
-		Repo r1;
-		r1.create(sFolder, tFolder);
-	}
-
-	else if (comm == "label")
-	{
-		char ch;
-		string fPath;
-		string maniName, newLabel, oldLabel;
-
-		//find the path to look in
-		cout << "Enter repository path: ";
-		cin >> fPath;
-
-		cout << endl;
-		cout << "M = add label via manifest name\n";
-		cout << "L = add label via existing label\n";
-		cin >> ch;
-
-		if (ch == 'M')
+		if (comm == "merge")
 		{
-			cout << "Enter manifest name (including \".txt\"): ";
-			cin >> maniName;
-			cout << "Enter new label name: ";
-			cin >> newLabel;
+			string parent = "";
+			string repo = "";
+			string manifest;
 
-			//append the manifest name to the file path
-			fPath += getSlash(fPath) + maniName;
-			cout << "DEBUG: new file path is = " << fPath << endl;
+			cout << "Enter the complete path of the parent project (T): ";
+			cin >> parent;
+			cout << "Enter the complete path of the repository: ";
+			cin >> repo;
+			cout << "Enter the filename or label of the manifest: ";
+			cin >> manifest;
 
-			insertLabel(fPath, newLabel);
-			cout << "DEBUG: added label\n";
+			Repo r3;
+			/* check the child into the project tree T before checking the documents
+			to see if they have they have small differences*/
+			string parentMan = r3.checkIn(parent, repo);
+
+			//merge after this
+			r3.merge(repo, parentMan, manifest, parent);
 
 		}
 
-		else if (ch == 'L')
+		else if (comm == "create")
 		{
-			cout << "Enter existing label name: ";
-			cin >> oldLabel;
-			cout << "Enter new label name: ";
-			cin >> newLabel;
+			string sFolder = "";
+			string tFolder = "";
 
-			string mPath = searchLabels(fPath, oldLabel);
-			insertLabel(mPath, newLabel);
+			cout << "Enter the complete path of the source folder: ";
+			cin >> sFolder;
+			cout << "Enter the complete path of the target folder: ";
+			cin >> tFolder;
+
+			Repo r1;
+			r1.create(sFolder, tFolder);
+		}
+
+		else if (comm == "label")
+		{
+			char ch;
+			string fPath;
+			string maniName, newLabel, oldLabel;
+
+			//find the path to look in
+			cout << "Enter repository path: ";
+			cin >> fPath;
+
+			cout << endl;
+			cout << "M = add label via manifest name\n";
+			cout << "L = add label via existing label\n";
+			cin >> ch;
+
+			if (ch == 'M')
+			{
+				cout << "Enter manifest name (including \".txt\"): ";
+				cin >> maniName;
+				cout << "Enter new label name: ";
+				cin >> newLabel;
+
+				//append the manifest name to the file path
+				fPath += getSlash(fPath) + maniName;
+				cout << "DEBUG: new file path is = " << fPath << endl;
+
+				insertLabel(fPath, newLabel);
+				cout << "DEBUG: added label\n";
+
+			}
+
+			else if (ch == 'L')
+			{
+				cout << "Enter existing label name: ";
+				cin >> oldLabel;
+				cout << "Enter new label name: ";
+				cin >> newLabel;
+
+				string mPath = searchLabels(fPath, oldLabel);
+				insertLabel(mPath, newLabel);
+
+			}
+		}
+
+		else if (comm == "check-out")
+		{
+
+			string sFolder = "";
+			string tFolder = "";
+			string manifest = "";
+
+			cout << "Enter the complete path of the repo folder: ";
+			cin >> sFolder;
+			cout << "Enter the complete path of the destination folder: ";
+			cin >> tFolder;
+			cout << "Enter the manifest name or label: ";
+			cin >> manifest;
+
+			Repo r1;
+			r1.checkOut(sFolder, tFolder, manifest);
 
 		}
+
+		else if (comm == "check-in")
+		{
+			string source = "";
+			string tar = "";
+
+			cout << "Enter the complete path of the source project: ";
+			cin >> source;
+			cout << "Enter the complete path of the repository: ";
+			cin >> tar;
+
+			string nonsense = "";
+			Repo r2;
+			nonsense = r2.checkIn(source, tar);
+
+		}
+
+		else if (comm == "quit")
+		{
+			q = true;
+		}
 	}
-
-	else if (comm == "check-out")
-	{
-
-		string sFolder = "";
-		string tFolder = "";
-		string manifest = "";
-
-		cout << "Enter the complete path of the source folder: ";
-		cin >> sFolder;
-		cout << "Enter the complete path of the target folder: ";
-		cin >> tFolder;
-		cout << "Enter the manifest name or label: ";
-		cin >> manifest;
-
-		Repo r1;
-		r1.checkOut(sFolder, tFolder, manifest);
-
-	}
-
-	else if (comm == "check-in")
-	{
-		string source = "";
-		string tar = "";
-
-		cout << "Enter the complete path of the source project: ";
-		cin >> source;
-		cout << "Enter the complete path of the repository: ";
-		cin >> tar;
-
-
-		Repo r2;
-		r2.checkIn(source, tar);
-
-	}
-
 
 	system("pause");
 	return 0;
