@@ -109,12 +109,18 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 //SPATH = sPath = R's manifesto, tPath = Target Project Tree's root folder
 void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 {
+	//Set Target Project Folder path to root (One folder up)
 	tPath = experimental::filesystem::path(tPath).parent_path().string();
+	this->manifest = new Manifest(tPath);
+	this->manifest->write(rPath + ",\t" + tManifest + ",\t" + rManifest + ",\t" + tPath + ",\t", "check-out ARGS:\t");
+	// Find correct manifest to parse from
+	if (rManifest.find(".txt") == string::npos)
+		rManifest = experimental::filesystem::path(searchLabels(rPath, rManifest)).stem().string() 
+		+ experimental::filesystem::path(searchLabels(rPath, rManifest)).extension().string();
+
 	//FIND COMMON ANCESTOR MANIFESTO
 
 	//OPEN AND PARSE R's MANIFESTO
-
-	// Open the manifest to parse
 	ifstream file(rPath + '/' + rManifest);
 	string line;
 	//Parse line by line
@@ -136,7 +142,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			{
 				experimental::filesystem::create_directory(tPath + fName);
 			}
-			//this->manifest->write(experimental::filesystem::path(this->tPath + fName).string(), "checkout: Folder\t");
+			this->manifest->write(experimental::filesystem::path(tPath + fName).string(), "Merge: Folder\t");
 
 
 		}
@@ -162,10 +168,16 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 					cout << "CREATED: " + tPath + newName << endl;
 					copyFile(aPath, tPath + newName);
 
+					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
+
+
 					// Rename T's version of the file
 					newName = fName.substr(0, fName.length() - extension.length()) + "_MT" + extension;
 					cout << "RENAMED: " + tPath + newName << endl;
 					experimental::filesystem::rename(experimental::filesystem::path(tPath + fName), experimental::filesystem::path(tPath + newName));
+
+					this->manifest->write(experimental::filesystem::path(tPath + newName).string(), "Merge: File Conflict\t");
+
 
 					// TODO: CREATE GRANDMOTHER VERSION OF FILE
 				}
@@ -174,6 +186,8 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 			{
 				// Copy the artifact and rename it to its original name
 				copyFile(aPath, tPath + fName);
+				this->manifest->write(experimental::filesystem::path(tPath + fName).string(), "Merge: File Created\t");
+
 			}
 
 		}
