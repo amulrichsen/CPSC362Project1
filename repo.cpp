@@ -33,7 +33,10 @@ string Repo::checkIn(string sPath, string tPath) {
 	this->manifest = new Manifest(tPath);
 	this->manifest->write(sPath + ",\t" + tPath, "check-in ARGS:\t");
 	this->head = new Leaf(this->sPath, this->tPath, this->manifest); //Create initial leaf for root folder
-	checkInLog(sPath, this->manifest->getManifestPath());
+	//checkInLog(sPath, this->manifest->getManifestPath());
+
+	string action = "check-in";
+	dotFile(this->tPath, this->manifest->getManifestPath(), this->sPath, action);
 
 	//Return the created manifest
 	return this->manifest->getManifestPath();
@@ -62,7 +65,8 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 	if (manifest.find(".txt") == string::npos)
 		manifest = experimental::filesystem::path(searchLabels(sPath, manifest)).stem().string() + experimental::filesystem::path(searchLabels(sPath, manifest)).extension().string();
 	// Create a manifest one folder above the target project tree root folder
-	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
+	//ORIGINAL: this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() + 1)));
+	this->manifest = new Manifest(tPath.substr(0, tPath.length() - (rootName.length() - 1))); //NEW
 	this->manifest->write(sPath + ",\t" + tPath + ",\t" + manifest, "check-out ARGS:\t");
 	this->manifest->write(sPath + getSlash(sPath) + manifest, "Parent: ");
 
@@ -104,6 +108,9 @@ void Repo::checkOut(string sPath, string tPath, string manifest) {
 
 
 	}
+
+	string action = "check-out";
+	dotFile(this->sPath, this->manifest->getManifestPath(), this->tPath, action);
 }
 
 //SPATH = sPath = R's manifesto, tPath = Target Project Tree's root folder
@@ -125,7 +132,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 
 		else if (line[26] == 'F')
 		{
-			
+
 			// Extract the relative path + folder name from the manifest line
 			string fName = line.substr(57, line.length() - 1);
 			fName.erase(fName.begin(), fName.begin() + rPath.length());
@@ -206,6 +213,7 @@ file path of the manifest created inside the repo for each check in -- ordered
 oldest to newest*/
 void Repo::checkInLog(string ptPath, string mPath)
 {
+
 	char s = getSlash(ptPath);
 	string name = "";
 	for (int i = 0; i < ptPath.size(); i++)
@@ -228,7 +236,7 @@ void Repo::checkInLog(string ptPath, string mPath)
 			previousPath += curr;
 			curr = "";
 		}
-		
+
 	}
 
 	string manifestLog = previousPath + name + "-manifestLog.txt";
@@ -239,4 +247,29 @@ void Repo::checkInLog(string ptPath, string mPath)
 	dst.close();
 }
 
+//rPath -> repository path	mPath->manifest path	pPath-> parent tree path
+/*keeps track of all actions taken within the repository*/
+void Repo::dotFile(string rPath, string mPath, string pPath, string act)
+{
+	char s = getSlash(rPath);
+	string curr = "";
+	string previousPath = "";
+	for (int i = 0; i < rPath.size(); i++)
+	{
+		curr += rPath[i];
+		if (rPath[i] == s)
+		{
+			previousPath += curr;
+			curr = "";
+		}
 
+	}
+
+	string log = previousPath + "Log.txt";
+	//cout << "log path: " << log << endl;
+
+	ofstream dst;
+	dst.open(log, ofstream::app);
+	dst << "Action: " << act << "\tManifest: " << mPath << "\tTree: " << pPath << "\n";
+	dst.close();
+}
