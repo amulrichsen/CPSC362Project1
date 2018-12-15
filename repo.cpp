@@ -290,7 +290,7 @@ void Repo::merge(string rPath, string tManifest, string rManifest, string tPath)
 						{
 							// Get the next line (next line is always artifact)
 							getline(gFile, line2);
-							string gPath = line2.substr(57, line2.length() - 58); //1 not 58
+							string gPath = line2.erase(0, 57); //1 not 58
 							newName = fName.substr(0, fName.length() - extension.length()) + "_MG" + extension;
 							copyFile(gPath, tPath + newName);
 							break;
